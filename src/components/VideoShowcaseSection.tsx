@@ -1,98 +1,109 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { Play, X, ExternalLink, Award, User, Briefcase, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X, ExternalLink, Award, User, Sparkles, Maximize2, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
+import ResponsiveImage from "./ResponsiveImage";
+import { allStudentWork } from "@/data/studentWork";
 
-const studentReels = [
-  {
-    id: 1,
-    title: "3D Character Animation Reel",
-    student: "Arjun Mehta",
-    category: "Animation",
-    thumbnail: "https://design-engine.io/img_bank/student_work1.webp",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "2:45",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "VFX Compositing Showreel",
-    student: "Sneha Patel",
-    category: "VFX",
-    thumbnail: "https://design-engine.io/img_bank/student_work5.webp",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "3:12",
-    featured: true,
-  },
-  {
-    id: 3,
-    title: "Motion Graphics Portfolio",
-    student: "Rahul Kumar",
-    category: "Motion Graphics",
-    thumbnail: "https://design-engine.io/img_bank/student_work3.webp",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "2:30",
-    featured: false,
-  },
-  {
-    id: 4,
-    title: "Game Environment Art",
-    student: "Priya Singh",
-    category: "Game Design",
-    thumbnail: "https://design-engine.io/img_bank/student_work6.webp",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "4:00",
-    featured: true,
-  },
-  {
-    id: 5,
-    title: "UI/UX Design Showcase",
-    student: "Vikram Sharma",
-    category: "UI/UX",
-    thumbnail: "https://design-engine.io/img_bank/student_work9.webp",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "1:55",
-    featured: false,
-  },
-  {
-    id: 6,
-    title: "Architectural Visualization",
-    student: "Ananya Gupta",
-    category: "VFX",
-    thumbnail: "https://design-engine.io/img_bank/student_work11.webp",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "3:45",
-    featured: false,
-  },
-];
-
-const VideoShowcaseSection = () => {
-  const [selectedVideo, setSelectedVideo] = useState<typeof studentReels[0] | null>(null);
+const StudentWorkShowcase = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedSlide, setSelectedSlide] = useState(0);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
+  const displayedWork = allStudentWork.slice(0, 9);
+  const selectedWork = selectedIndex !== null ? displayedWork[selectedIndex] : null;
+  const selectedImages = selectedWork ? selectedWork.images ?? [selectedWork.image] : [];
+
+  useEffect(() => {
+    if (selectedIndex !== null) {
+      setSelectedSlide(0);
+    }
+  }, [selectedIndex]);
+
+  const handlePrev = () => {
+    if (!selectedWork) return;
+    setSelectedSlide((prev) =>
+      selectedImages.length > 0
+        ? prev === 0
+          ? selectedImages.length - 1
+          : prev - 1
+        : 0,
+    );
+  };
+
+  const handleNext = () => {
+    if (!selectedWork) return;
+    setSelectedSlide((prev) =>
+      selectedImages.length > 0
+        ? prev === selectedImages.length - 1
+          ? 0
+          : prev + 1
+        : 0,
+    );
+  };
+
   return (
-    <section id="showcase" className="py-20 md:py-32 relative overflow-hidden">
+    <section id="showcase" className="py-16 md:py-20 relative overflow-hidden min-h-screen sm:min-h-0">
       {/* Premium dark background */}
       <div className="absolute inset-0 bg-[#030306]" />
       
-      {/* Gradient orbs with amber accent */}
+      {/* Golden Orbs */}
       <motion.div
-        animate={{ x: [0, 40, 0], y: [0, -30, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-neon-purple/15 rounded-full blur-[100px]"
+        animate={{ x: [0, 60, 0], y: [0, -40, 0] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 left-20 w-[600px] h-[600px] bg-[#ffc107]/10 rounded-full blur-[120px]"
       />
       <motion.div
-        animate={{ x: [0, -30, 0], y: [0, 40, 0] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-neon-cyan/10 rounded-full blur-[80px]"
+        animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-[#ffd54f]/10 rounded-full blur-[100px]"
       />
-      {/* Amber glow */}
       <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.15, 0.1] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#ffc107]/5 rounded-full blur-[120px]"
+        animate={{ x: [0, 30, 0], y: [0, -30, 0] }}
+        transition={{ duration: 20, repeat: Infinity }}
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-[#ffb300]/10 rounded-full blur-[90px]"
       />
+
+      {/* 3D Grid Effect */}
+      <div className="absolute inset-0 opacity-15">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,193,7,0.08) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,193,7,0.08) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+            transform: "perspective(500px) rotateX(60deg)"
+          }}
+        />
+      </div>
+
+      {/* Golden Gradient Overlay */}
+      <div className="absolute inset-0 mix-blend-overlay bg-gradient-to-br from-[#ffc107]/20 via-transparent to-[#ffd54f]/10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#030306] via-[#030306]/80 to-transparent" />
+
+      {/* Floating Particles */}
+      {[...Array(12)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 rounded-full bg-[#ffc107]"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`
+          }}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [0.2, 0.8, 0.2]
+          }}
+          transition={{
+            duration: 4 + Math.random() * 3,
+            repeat: Infinity,
+            delay: Math.random() * 2
+          }}
+        />
+      ))}
 
       <div className="container relative z-10 px-4">
         {/* Section Header */}
@@ -101,95 +112,89 @@ const VideoShowcaseSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
+          className="text-center max-w-3xl mx-auto mb-8 md:mb-12 lg:mb-16"
         >
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-[#ffc107]/20 mb-6"
+          {/* Premium Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-[#ffc107] mb-4 md:mb-6"
           >
-            <Sparkles className="w-4 h-4 text-[#ffc107]" />
-            <span className="text-sm font-medium text-white/80">Student Work</span>
-          </motion.span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>
-            <span className="text-white">Animation </span>
-            <span className="bg-gradient-to-r from-[#ffc107] via-[#ffc107] to-[#ffc107] bg-clip-text text-transparent">Showreels</span>
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-[#ffc107]" />
+            </motion.div>
+            <span className="text-xs md:text-sm font-medium text-white/90">Student Work</span>
+          </motion.div>
+
+          <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold mb-3 md:mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>
+            <span className="text-white">Production-Ready </span>
+            <span className="bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] bg-clip-text text-transparent">
+              Portfolios
+            </span>
           </h2>
-          <p className="text-white/50 text-lg">
-            Watch industry-ready work from our students now working at top studios worldwide
+          <p className="text-white/60 text-sm md:text-lg px-4">
+            Explore exceptional work from our students now working at top studios worldwide
           </p>
         </motion.div>
 
-        {/* Video Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {studentReels.map((reel, index) => (
+        {/* Image Grid - More gap and padding on mobile for better spacing */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+          {displayedWork.map((item, index) => (
             <motion.div
-              key={reel.id}
+              key={item.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              onMouseEnter={() => setHoveredId(reel.id)}
+              onMouseEnter={() => setHoveredId(item.id)}
               onMouseLeave={() => setHoveredId(null)}
-              onClick={() => setSelectedVideo(reel)}
+              onClick={() => setSelectedIndex(index)}
               className="group relative cursor-pointer"
             >
-              {/* Card */}
-              <div className="relative rounded-2xl overflow-hidden bg-white/[0.03] backdrop-blur-xl border border-white/10 transition-all duration-500 group-hover:border-[#ffc107]/30">
-                {/* Thumbnail */}
-                <div className="relative aspect-video overflow-hidden">
+              {/* Card - Larger aspect ratio for mobile to increase height */}
+              <div className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-xl border border-[#ffc107]/10 transition-all duration-500 group-hover:border-[#ffc107]/30 group-hover:shadow-[0_0_30px_rgba(255,193,7,0.2)]">
+                {/* Image - Taller aspect ratio on mobile for more height */}
+                <div className="relative aspect-[4/3] md:aspect-video overflow-hidden">
                   <motion.img
-                    src={reel.thumbnail}
-                    alt={reel.title}
+                    src={item.image}
+                    alt={item.title}
+                    loading="lazy"
                     className="w-full h-full object-cover"
-                    animate={{ scale: hoveredId === reel.id ? 1.1 : 1 }}
+                    animate={{ scale: hoveredId === item.id ? 1.05 : 1 }}
                     transition={{ duration: 0.5 }}
                   />
                   
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#030306] via-black/20 to-transparent" />
-                  
-                  {/* Play Button */}
+                  {/* Overlay - appears on hover */}
                   <motion.div 
-                    className="absolute inset-0 flex items-center justify-center"
-                    animate={{ opacity: hoveredId === reel.id ? 1 : 0.7 }}
+                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: hoveredId === item.id ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <motion.div
-                      animate={{ scale: hoveredId === reel.id ? 1.1 : 1 }}
-                      className="w-16 h-16 rounded-full bg-gradient-to-r from-neon-purple to-neon-cyan flex items-center justify-center shadow-neon border border-transparent hover:border-[#ffc107]/50 transition-colors duration-300"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: hoveredId === item.id ? 1 : 0.8, opacity: hoveredId === item.id ? 1 : 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                      className="bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] rounded-full p-3 shadow-lg"
                     >
-                      <Play className="w-6 h-6 text-[#ffc107] ml-1" fill="#ffc107" />
+                      <Maximize2 className="w-5 h-5 text-black" />
                     </motion.div>
                   </motion.div>
-
-                  {/* Featured Badge */}
-                  {reel.featured && (
-                    <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#ffc107] text-black text-xs font-bold border border-[#ffc107]/50">
-                      <Award className="w-3 h-3 text-black" />
-                      Featured
-                    </div>
-                  )}
-
-                  {/* Duration */}
-                  <div className="absolute bottom-3 right-3 px-2 py-1 rounded bg-black/60 backdrop-blur-sm text-xs text-white font-medium border border-[#ffc107]/20">
-                    {reel.duration}
-                  </div>
-
-                  {/* Category */}
-                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm text-xs text-[#ffc107] font-medium border border-[#ffc107]/20">
-                    {reel.category}
-                  </div>
                 </div>
 
-                {/* Info */}
-                <div className="p-4">
-                  <h3 className="text-lg font-bold text-white mb-2 line-clamp-1" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    {reel.title}
+                {/* Info - More padding on mobile */}
+                <div className="p-4 md:p-3">
+                  <h3 className="text-base md:text-lg font-bold text-white mb-2 line-clamp-1" style={{ fontFamily: 'Syne, sans-serif' }}>
+                    {item.title}
                   </h3>
                   <div className="flex items-center text-sm">
-                    <div className="flex items-center gap-2 text-white/50">
-                      <User className="w-4 h-4 text-[#ffc107]" />
-                      {reel.student}
+                    <div className="flex items-center gap-2 text-white/60">
+                      <User className="w-3 h-3 md:w-4 md:h-4 text-[#ffc107]" />
+                      <span className="text-xs md:text-sm">{item.student}</span>
                     </div>
                   </div>
                 </div>
@@ -198,63 +203,105 @@ const VideoShowcaseSection = () => {
           ))}
         </div>
 
-        {/* View All */}
+        {/* View More/Less Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          className="text-center mt-10 md:mt-8"
         >
-          <Link to="/portfolio">
-            <Button 
+          <Link to="/student-work">
+            <Button
               size="lg"
-              className="bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-[#ffc107]/30 text-white font-semibold rounded-full px-8 group transition-all duration-300"
+              className="bg-gradient-to-r from-[#ffc107] to-[#ffb300] hover:from-[#ffb300] hover:to-[#ffc107] text-black font-semibold rounded-full px-6 md:px-8 py-5 md:py-6 group transition-all duration-300 text-sm md:text-base"
             >
-              View Full Portfolio
-              <ExternalLink className="w-4 h-4 ml-2 text-[#ffc107] group-hover:translate-x-1 transition-all" />
+              View All Work
+              <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-all" />
             </Button>
           </Link>
         </motion.div>
       </div>
 
-      {/* Video Modal */}
+      {/* Image Modal */}
       <AnimatePresence>
-        {selectedVideo && (
+        {selectedWork && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4"
-            onClick={() => setSelectedVideo(null)}
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4"
+            onClick={() => setSelectedIndex(null)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", damping: 25 }}
-              className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden bg-black border border-[#ffc107]/20"
+              className="relative w-full max-w-5xl rounded-2xl overflow-hidden bg-[#030306] border border-[#ffc107]/20 max-h-screen sm:max-h-[85vh] overflow-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
-                onClick={() => setSelectedVideo(null)}
-                className="absolute -top-12 right-0 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors border border-transparent hover:border-[#ffc107]/30"
+                onClick={() => setSelectedIndex(null)}
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 p-1.5 sm:p-2 rounded-full bg-black/50 backdrop-blur-sm hover:bg-black/70 transition-colors border border-[#ffc107]/30 hover:border-[#ffc107]/50"
               >
-                <X className="w-6 h-6 text-[#ffc107]" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#ffc107]" />
               </button>
 
-              {/* Video Player Placeholder */}
-              <div className="w-full h-full bg-gradient-to-br from-neon-purple/20 to-neon-cyan/20 flex items-center justify-center">
-                <div className="text-center">
-                  <Play className="w-20 h-20 text-[#ffc107] mx-auto mb-4" fill="#ffc107" />
-                  <p className="text-white/50 text-lg">{selectedVideo.title}</p>
-                  <p className="text-white/30">by {selectedVideo.student}</p>
+              {/* Image Display */}
+                <div className="relative">
+                <ResponsiveImage
+                  src={selectedImages[selectedSlide]}
+                  alt={selectedWork.title}
+                  sizes="100vw"
+                  className="w-full h-auto max-h-[60vh] sm:max-h-[85vh] object-contain"
+                />
+
+                {/* Mobile: show title & credits below image instead of overlay */}
+                <div className="sm:hidden p-4 bg-transparent text-left">
+                  <div className="mb-1">
+                    <h3 className="text-base font-bold text-white truncate">{selectedWork.title}</h3>
+                  </div>
+                  <div className="flex items-center justify-between text-sm text-white/70">
+                    <span>by {selectedWork.student}</span>
+                    <span>{selectedSlide + 1} / {selectedImages.length}</span>
+                  </div>
+                </div>
+
+                {selectedImages.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handlePrev}
+                      className="absolute left-2 sm:left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/60 p-2 text-white transition hover:bg-black/90"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      className="absolute right-2 sm:right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/60 p-2 text-white transition hover:bg-black/90"
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+
+                {/* Image Info Overlay */}
+                <div className="hidden sm:block absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+                    <h3 className="text-lg sm:text-2xl font-bold text-white truncate">{selectedWork.title}</h3>
+                    <span className="text-sm text-white/60">
+                      {selectedSlide + 1} / {selectedImages.length}
+                    </span>
+                  </div>
+                  <p className="text-white/60">by {selectedWork.student}</p>
                 </div>
               </div>
 
               {/* Bottom accent */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffc107] to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffc107] to-[#ffd54f] to-transparent" />
             </motion.div>
           </motion.div>
         )}
@@ -263,4 +310,4 @@ const VideoShowcaseSection = () => {
   );
 };
 
-export default VideoShowcaseSection;
+export default StudentWorkShowcase;

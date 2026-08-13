@@ -1,0 +1,14 @@
+supabase auth users create
+ --email delhi@gmail.com --password AdminSecure2024!
+
+
+
+we have contact form where we have center or campus dropdown make it same in all form in frontend and fixed there value 
+
+delhi    and then according to this city we have to relate user login and display that city query in the admin   implement it and let me know how we can use 
+
+also add center column in admin enquiry page i have added both user in the db and also added center column the enquiry table
+
+
+shahwajinfo7@gmail.com
+Admin12.345@@####

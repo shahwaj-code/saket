@@ -1,284 +1,271 @@
 import { motion } from "framer-motion";
 import { Building2, TrendingUp, Award, Users, Star, Sparkles } from "lucide-react";
 
-// Hiring Partners from Design Engine
-const hiringPartners = [
-  { name: "Spyne", logo: "https://design-engine.io/img_bank/spyne_logo.webp" },
-  { name: "Hindustan Times", logo: "https://design-engine.io/img_bank/hindustan.webp" },
-  { name: "Blinkit", logo: "https://design-engine.io/img_bank/blinkit.webp" },
-  { name: "Dropbox", logo: "https://design-engine.io/img_bank/dropbox.webp" },
-  { name: "Shopify", logo: "https://design-engine.io/img_bank/shopifyy.webp" },
-  { name: "GitHub", logo: "https://design-engine.io/img_bank/github_logo.webp" },
-  { name: "Stripe", logo: "https://design-engine.io/img_bank/strip.webp" },
-  { name: "Care Health", logo: "https://design-engine.io/img_bank/care_health_insurance.webp" },
-  { name: "Mobisoft Labs", logo: "https://design-engine.io/img_bank/mobisoft_labs.webp" },
-  { name: "29 Media", logo: "https://design-engine.io/img_bank/29_media.webp" },
-  { name: "Ken Research", logo: "https://design-engine.io/img_bank/ken_reasearch.webp" },
-  { name: "BE Digitech", logo: "https://design-engine.io/img_bank/be_digitech.webp" },
+// All Partner Companies (from your list)
+const partnerCompanies = [
+  { name: "Boult Audio" },
+  { name: "Schmooze Media" },
+  { name: "Oak & Stone Inc" },
+  { name: "Whitelisted Estate" },
+  { name: "Ambrosia Botanicals" },
+  { name: "Charuvi Designs" },
+  { name: "Future Vision" },
+  { name: "Tiore Global" },
+  { name: "Just Procure" },
+  { name: "Ocean Techventures" },
+  { name: "Myza Diamond Private Limited" },
+  { name: "Trafurry" },
+  { name: "Immersive Art Studio" },
+  { name: "Whitelisted Estates" },
+  { name: "Unstop" },
+  { name: "Adda Education" },
+  { name: "BE Digitech" },
+  { name: "ECorp IT" },
+  { name: "Turpinas Energy" },
+  { name: "Narang Properties" },
+  { name: "Social Codify" },
+  { name: "The Prime Address" },
+  { name: "Gushsquad" },
+  { name: "Qwerty Brand" },
+  { name: "Xponic Experiences Private Limited" },
+  { name: "BeRaw Stories Production" },
+  { name: "Mobisoft Labs" },
+  { name: "RentOk" },
+  { name: "Expand Wide" },
+  { name: "Renticle" },
+  { name: "Infyplus" },
 ];
 
-// Tech Giants & IT Partners
-const techPartners = [
-  { name: "Dell", logo: "https://design-engine.io/img_bank/Dell.webp" },
-  { name: "HP", logo: "https://design-engine.io/img_bank/hp.webp" },
-  { name: "Samsung", logo: "https://design-engine.io/img_bank/samsung.webp" },
-  { name: "Sony", logo: "https://design-engine.io/img_bank/sony.webp" },
-  { name: "Nvidia", logo: "https://design-engine.io/img_bank/nvidia.webp" },
-  { name: "AMD", logo: "https://design-engine.io/img_bank/amd.webp" },
-  { name: "Intel", logo: "https://design-engine.io/img_bank/intel.webp" },
-  { name: "Deloitte", logo: "https://design-engine.io/img_bank/deloite.webp" },
-  { name: "Accenture", logo: "https://design-engine.io/img_bank/accenturee.webp" },
-  { name: "Infosys", logo: "https://design-engine.io/img_bank/infosys.webp" },
-  { name: "TCS", logo: "https://design-engine.io/img_bank/tcs.webp" },
-  { name: "Wipro", logo: "https://design-engine.io/img_bank/wipro.webp" },
-  { name: "HCL", logo: "https://design-engine.io/img_bank/hcl.webp" },
-  { name: "Capgemini", logo: "https://design-engine.io/img_bank/cap_gemeni.webp" },
-  { name: "Tech Mahindra", logo: "https://design-engine.io/img_bank/tech_mahindra.webp" },
-];
-
-const stats = [
-  { 
-    value: "95%", 
-    label: "Placement Rate", 
-    icon: TrendingUp, 
-    color: "from-neon-green to-neon-cyan",
-    description: "of students placed within 3 months"
-  },
-  { 
-    value: "100%*", 
-    label: "Internship Guarantee", 
-    icon: Award, 
-    color: "from-neon-purple to-neon-pink",
-    description: "industry-leading salaries"
-  },
-  { 
-    value: "₹24 LPA", 
-    label: "Highest Package", 
-    icon: Star, 
-    color: "from-neon-orange to-neon-pink",
-    description: "top performer achievement"
-  },
-  { 
-    value: "1000+", 
-    label: "Hiring Partners", 
-    icon: Building2, 
-    color: "from-neon-cyan to-neon-purple",
-    description: "companies recruiting from us"
-  },
-];
+// Split companies into two groups
+const firstRowCompanies = partnerCompanies.slice(0, 16);
+const secondRowCompanies = partnerCompanies.slice(16);
 
 const PartnersCarousel = () => {
   return (
-    <section className="section-padding relative overflow-hidden">
-      {/* Immersive Background */}
-      <div className="absolute inset-0 mesh-gradient opacity-40" />
-      <div className="absolute inset-0 cyber-grid opacity-10" />
-      
-      {/* Animated orbs */}
+    <section className="relative py-20 overflow-hidden bg-[#030306]">
+      {/* Dark Background */}
+      <div className="absolute inset-0 bg-[#030306]" />
+
+      {/* Animated Orbs - subtle */}
       <motion.div
-        animate={{ 
-          x: [0, 40, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-r from-neon-purple/20 to-neon-pink/20 rounded-full blur-3xl"
+        animate={{ x: [0, 60, 0], y: [0, -40, 0] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/4 left-1/4 w-[520px] h-[520px] bg-[#ffc107]/10 rounded-full blur-[70px] pointer-events-none"
       />
       <motion.div
-        animate={{ 
-          x: [0, -40, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-to-r from-neon-cyan/20 to-neon-green/20 rounded-full blur-3xl"
+        animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
+        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] bg-[#ffd54f]/10 rounded-full blur-[60px] pointer-events-none"
       />
 
-      <div className="container relative z-10 px-4 md:px-6">
+      {/* 3D Grid - subtle */}
+      <div className="absolute inset-0 opacity-10 hidden sm:block">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,193,7,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,193,7,0.05) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+            transform: "perspective(500px) rotateX(60deg)",
+          }}
+        />
+      </div>
+
+      {/* Gradient Overlay - subtle */}
+      <div className="absolute inset-0 mix-blend-overlay bg-gradient-to-br from-[#ffc107]/20 via-transparent to-[#ffd54f]/10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#030306] via-[#030306]/80 to-transparent" />
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
+          {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6 border border-[#ffc107]/30"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-[#ffc107]/40 mb-6"
           >
             <Users className="w-4 h-4 text-[#ffc107]" />
-            <span className="text-sm font-medium gradient-text">1000+ Hiring Partners</span>
+            <span className="text-xs sm:text-sm font-light tracking-wider text-white/90">
+              DELHI NCR RECRUITERS
+            </span>
+            <Sparkles className="w-4 h-4 text-[#ffd54f]" />
           </motion.div>
-          
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Our Alumni Work At{" "}
-            <span className="gradient-text">Top Companies</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From animation studios to tech giants, our students are making their mark everywhere 🚀
-          </p>
+
+          {/* Heading */}
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9 }}
+            viewport={{ once: true }}
+            className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wide mb-4"
+            style={{ fontFamily: "Syne, sans-serif" }}
+          >
+            <span className="text-white">Studios Hiring </span>
+            <span className="text-[#ffc107]">Our Talent</span>
+          </motion.h2>
+
+          {/* Subheadline */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-sm sm:text-base text-white/70 max-w-2xl mx-auto tracking-wide"
+          >
+            Top media houses partnering with us for elite Delhi design talent.
+          </motion.p>
         </motion.div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-16">
-          {stats.map((stat, index) => (
+        {/* Stats Grid - Minimal */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+          {[
+            { value: "95%", label: "95% Job Track Record", icon: TrendingUp },
+            { value: "100%", label: "Studio Internship", icon: Award },
+            { value: "₹12LPA", label: "Best Salary Offer", icon: Star },
+            { value: "1000+", label: "Studio Network", icon: Building2 },
+          ].map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 30, scale: 0.9 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: index * 0.1 }}
               viewport={{ once: true }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              className="relative group cursor-pointer"
+              whileHover={{ y: -4 }}
+              className="relative group"
             >
-              <div className="glass-card p-6 text-center h-full relative overflow-hidden border border-transparent group-hover:border-[#ffc107]/50 transition-colors duration-300">
-                {/* Glow effect on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                
-                <motion.div 
-                  className={`w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${stat.color} p-0.5`}
-                  whileHover={{ rotate: [0, -5, 5, 0] }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="w-full h-full rounded-2xl bg-card flex items-center justify-center">
-                    <stat.icon className="w-6 h-6 text-[#ffc107]" />
+              <div className="bg-white/5 backdrop-blur-sm border border-[#ffc107]/30 hover:border-[#ffc107] rounded-xl p-4 text-center transition-all duration-500 hover:shadow-[0_0_25px_rgba(255,193,7,0.4)]">
+                <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-[#ffc107]/20 to-[#ffd54f]/20 p-0.5 border border-[#ffc107]/30">
+                  <div className="w-full h-full rounded-lg bg-[#030306] flex items-center justify-center">
+                    <stat.icon className="w-4 h-4 text-[#ffc107]" />
                   </div>
-                </motion.div>
-                
-                <motion.div 
-                  className="text-3xl md:text-4xl font-bold gradient-text mb-1"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                >
+                </div>
+                <div className="text-xl font-light tracking-wide text-white mb-1">
                   {stat.value}
-                </motion.div>
-                <div className="text-sm font-semibold text-foreground mb-1">{stat.label}</div>
-                <div className="text-xs text-muted-foreground">{stat.description}</div>
+                </div>
+                <div className="text-xs font-light tracking-wider text-white/60">{stat.label}</div>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Partner Categories Label */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="flex items-center justify-center gap-4 mb-8"
-        >
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-neon-purple/30 to-transparent" />
-          <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#ffc107]" />
-            Hiring Partners & Tech Giants
-            <Sparkles className="w-4 h-4 text-[#ffc107]" />
-          </span>
-          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-neon-cyan/30 to-transparent" />
-        </motion.div>
-
-        {/* First Carousel - Hiring Partners */}
-        <div className="relative mb-6">
-          <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-10" />
-
-          <div className="flex overflow-hidden py-4">
-            <motion.div
-              animate={{ x: [0, -1728] }}
-              transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 25,
-                  ease: "linear",
-                },
-              }}
-              className="flex gap-6 items-center"
-            >
-              {[...hiringPartners, ...hiringPartners].map((partner, index) => (
-                <motion.div
-                  key={`hiring-${partner.name}-${index}`}
-                  whileHover={{ scale: 1.15, y: -8 }}
-                  className="flex-shrink-0 h-20 w-36 px-4 py-3 rounded-2xl glass-card flex items-center justify-center group cursor-pointer relative overflow-hidden border border-transparent hover:border-[#ffc107]/50 transition-colors duration-300"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-neon-purple/0 to-neon-cyan/0 group-hover:from-neon-purple/10 group-hover:to-neon-cyan/10 transition-all duration-300" />
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="max-h-12 max-w-full object-contain opacity-80 group-hover:opacity-100 transition-all duration-300"
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
+        {/* Carousel Section */}
+        <div className="space-y-8 mt-12">
+          {/* Decorative Header */}
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#ffc107]/50" />
+            <span className="text-xs font-light tracking-widest text-white/50 flex items-center gap-2">
+              <Sparkles className="w-3 h-3 text-[#ffc107]" />
+              DELHI NCR RECRUITERS
+              <Sparkles className="w-3 h-3 text-[#ffd54f]" />
+            </span>
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#ffb300]/50" />
           </div>
-        </div>
 
-        {/* Second Carousel - Tech Giants (reverse direction) */}
-        <div className="relative">
-          <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-10" />
+          {/* First Row - Left to Right */}
+          <div className="relative">
+            {/* Gradient Fades */}
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#030306] to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#030306] to-transparent z-10" />
 
-          <div className="flex overflow-hidden py-4">
-            <motion.div
-              animate={{ x: [-2160, 0] }}
-              transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 35,
-                  ease: "linear",
-                },
-              }}
-              className="flex gap-6 items-center"
-            >
-              {[...techPartners, ...techPartners].map((partner, index) => (
-                <motion.div
-                  key={`tech-${partner.name}-${index}`}
-                  whileHover={{ scale: 1.15, y: -8 }}
-                  className="flex-shrink-0 h-16 w-32 px-3 py-2 rounded-xl glass-card flex items-center justify-center group cursor-pointer relative overflow-hidden border border-transparent hover:border-[#ffc107]/50 transition-colors duration-300"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/0 to-neon-purple/0 group-hover:from-neon-cyan/10 group-hover:to-neon-purple/10 transition-all duration-300" />
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="max-h-10 max-w-full object-contain opacity-80 group-hover:opacity-100 transition-all duration-300"
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Testimonial Quote */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="mt-16 max-w-3xl mx-auto"
-        >
-          <div className="glass-card p-6 md:p-8 text-center relative overflow-hidden border border-[#ffc107]/20">
-            <div className="absolute inset-0 bg-gradient-to-r from-neon-purple/5 via-transparent to-neon-cyan/5" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-neon-purple to-neon-cyan rounded-full" />
-            
-            <div className="relative z-10">
-              <div className="text-5xl mb-4">💬</div>
-              <p className="text-lg md:text-xl font-medium text-foreground mb-6 italic leading-relaxed">
-                "Design Engine students stand out for their industry-ready skills and creative problem-solving abilities. 
-                They're exactly what modern studios need."
-              </p>
-              <div className="flex items-center justify-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-r from-neon-purple to-neon-cyan flex items-center justify-center text-white font-bold text-lg shadow-neon">
-                  HR
-                </div>
-                <div className="text-left">
-                  <div className="font-bold text-foreground">HR Director</div>
-                  <div className="text-sm text-muted-foreground">Leading Animation Studio</div>
-                </div>
-              </div>
+            {/* Carousel Container */}
+            <div className="overflow-hidden py-2">
+              <motion.div
+                animate={{ x: [0, -4200] }}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 100,
+                    ease: "linear",
+                  },
+                }}
+                className="flex gap-5 items-center"
+              >
+                {/* Triple the companies for smooth loop */}
+                {[...firstRowCompanies, ...firstRowCompanies, ...firstRowCompanies].map((company, index) => (
+                  <div
+                    key={`row1-${company.name}-${index}`}
+                    className="flex-shrink-0"
+                  >
+                    <div className="px-7 py-4 rounded-lg bg-black/40 backdrop-blur-sm border-2 border-[#ffc107]/40 hover:border-[#ffc107] transition-all duration-500 hover:shadow-[0_0_25px_rgba(255,193,7,0.35)]">
+                      <span 
+                        className="text-lg md:text-xl text-white font-light tracking-wide whitespace-nowrap"
+                        style={{ fontFamily: "Syne, sans-serif" }}
+                      >
+                        {company.name}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
             </div>
           </div>
-        </motion.div>
+
+          {/* Second Row - Right to Left */}
+          <div className="relative">
+            {/* Gradient Fades */}
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#030306] to-transparent z-10" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#030306] to-transparent z-10" />
+
+            {/* Carousel Container */}
+            <div className="overflow-hidden py-2">
+              <motion.div
+                animate={{ x: [-4200, 0] }}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 110,
+                    ease: "linear",
+                  },
+                }}
+                className="flex gap-5 items-center"
+              >
+                {/* Triple the companies for smooth loop */}
+                {[...secondRowCompanies, ...secondRowCompanies, ...secondRowCompanies].map((company, index) => (
+                  <div
+                    key={`row2-${company.name}-${index}`}
+                    className="flex-shrink-0"
+                  >
+                    <div className="px-7 py-4 rounded-lg bg-black/40 backdrop-blur-sm border-2 border-[#ffc107]/40 hover:border-[#ffc107] transition-all duration-500 hover:shadow-[0_0_25px_rgba(255,193,7,0.35)]">
+                      <span 
+                        className="text-lg md:text-xl text-white font-light tracking-wide whitespace-nowrap"
+                        style={{ fontFamily: "Syne, sans-serif" }}
+                      >
+                        {company.name}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Partner Count Badge */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            viewport={{ once: true }}
+            className="flex justify-center mt-8"
+          >
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-[#ffc107]/40 hover:border-[#ffc107] transition-all duration-500 hover:shadow-[0_0_20px_rgba(255,193,7,0.3)]">
+              <Building2 className="w-4 h-4 text-[#ffc107]" />
+              <span className="text-sm font-light tracking-wide text-white/80">
+                <span className="font-normal text-[#ffc107]">1000+</span> INDUSTRY PARTNERS
+              </span>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

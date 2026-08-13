@@ -12,66 +12,22 @@ serve(async (req) => {
 
   try {
     const { messages } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { 
-            role: "system", 
-            content: `You are a helpful AI assistant for Design Engine, India's premier Animation & Design Academy. You help prospective students with:
-- Course information (Animation, VFX, Motion Graphics, UI/UX Design, Graphic Design, Game Design, Video Editing, Generative AI)
-- Admission process and fee details
-- Career opportunities after course completion
-- Placement assistance and portfolio building
-- Batch timings and schedules
-- Software tools taught (Adobe Creative Suite, After Effects, Blender, etc.)
+    // Simple response without AI API
+    const lastMessage = messages?.[messages.length - 1]?.content || "";
 
-Be friendly, professional, and encouraging. Keep responses concise but helpful. Use emojis sparingly to make conversations engaging. If you don't know specific details like exact fees, encourage them to fill the enquiry form or call the helpline.` 
-          },
-          ...messages,
-        ],
-        stream: true,
-      }),
+    const reply = {
+      message: `Thanks for your message: "${lastMessage}". Our Design Engine team will assist you shortly. Please also fill the enquiry form for faster response.`,
+    };
+
+    return new Response(JSON.stringify(reply), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
     });
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limits exceeded, please try again later." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Payment required, please add funds to your Lovable AI workspace." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "AI gateway error" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
-    });
   } catch (e) {
     console.error("chat error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "Server error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

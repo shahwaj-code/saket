@@ -14,6 +14,7 @@ import {
   Star,
   Smartphone,
 } from "lucide-react";
+
 import { Button } from "./ui/button";
 import EnquiryModal from "./EnquiryModal";
 
@@ -24,64 +25,55 @@ const features = [
     icon: Cpu,
     title: "AI-First Curriculum",
     description:
-      "Every course integrates the latest AI tools into your workflow from day one.",
-    color: "from-neon-purple to-neon-pink",
-    stat: "10+ AI Tools",
+      "Every single module injects premium Gen-AI workflows into your core design pipeline.",
+    stat: "25+ AI Tools",
   },
   {
     icon: GraduationCap,
     title: "Expert Mentors",
     description:
-      "Learn from professionals with 10+ years experience at top studios.",
-    color: "from-neon-cyan to-neon-purple",
-    stat: "50+ Experts",
+      "Learn from media industry veterans with 10+ years of active studio experience.",
+    stat: "Top Delhi Faculty",
   },
   {
     icon: Briefcase,
     title: "Placement Support",
     description:
-      "Dedicated career services with interview prep and portfolio reviews.",
-    color: "from-neon-pink to-neon-orange",
-    stat: "95% Placed",
+      "Specialized Delhi placement cell offering intensive corporate interview preparation.",
+    stat: "100%* Placement Assistance",
   },
   {
     icon: Users,
     title: "Small Batches",
     description:
-      "Maximum 15 students per batch for personalized attention.",
-    color: "from-neon-green to-neon-cyan",
-    stat: "1:8 Ratio",
+      "Maximum 15 seats per batch ensuring premium one-on-one mentor attention.",
+    stat: "1:15 Elite Ratio",
   },
   {
     icon: Award,
     title: "Certified Programs",
     description:
-      "Industry-recognized certificates valued by top employers.",
-    color: "from-neon-orange to-neon-pink",
-    stat: "Global Certs",
+      "UGC & university-recognized credentials valued by top media employers.",
+    stat: "Global Degrees",
   },
   {
     icon: Clock,
     title: "Flexible Learning",
     description:
-      "Online, offline, or hybrid modes to fit your schedule.",
-    color: "from-neon-purple to-neon-cyan",
-    stat: "3 Modes",
+      "Classroom, studio-based, or hybrid modes tailored for Delhi NCR aspirants.",
+    stat: "South Delhi Hub",
   },
 ];
 
 /* ================= DIFFERENTIATORS ================= */
 
 const differentiators = [
-  { icon: Sparkles, text: "Live mentorship & interactive doubt sessions" },
-  { icon: Target, text: "Real client projects for hands-on experience" },
-  { icon: Rocket, text: "Lifetime access to course materials & updates" },
-  { icon: Zap, text: "Dedicated placement cell with 200+ partners" },
-  { icon: Star, text: "AI tools integrated across all courses" },
-  {
-    icon: Smartphone,
-    text: "DE Student App – Access lessons, notes, exams, and certifications anytime, anywhere.",
-  },
+  { icon: Sparkles, text: "One-on-one studio mentorship & weekly offline doubt sessions" },
+  { icon: Target, text: "Live commercial agency briefs for studio-level experience." },
+  { icon: Rocket, text: "Lifetime access to core design modules & global resources" },
+  { icon: Zap, text: "Delhi-NCR placement cell hosting weekly corporate recruitment drives" },
+  { icon: Star, text: "Gen-AI software production pipelines integrated across all streams" },
+  { icon: Smartphone, text: "Smart LMS Student App" },
 ];
 
 /* ================= COMPONENT ================= */
@@ -90,8 +82,13 @@ const WhyUsSection = () => {
   const [showEnquiry, setShowEnquiry] = useState(false);
 
   return (
-    <section id="why-us" className="section-padding relative overflow-hidden">
-      <div className="container relative z-10">
+    <section id="why-us" className="relative py-12 md:py-16 lg:py-20 bg-[#030306] overflow-hidden">
+
+      {/* BACKGROUND GLOW */}
+      <div className="absolute top-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-[#ffc107]/10 blur-3xl rounded-full" />
+      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-[#ffc107]/5 blur-3xl rounded-full" />
+
+      <div className="container mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
 
         {/* HEADER */}
         <motion.div
@@ -99,26 +96,24 @@ const WhyUsSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
         >
-          <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-card mb-6 border border-neon-cyan/30">
-            <Sparkles className="w-4 h-4" style={{ color: "#ffc107" }} />
-            <span className="text-neon-cyan font-medium">
-              Why Choose Us
-            </span>
+          <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border border-[#ffc107]/30 mb-4 sm:mb-6">
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#ffc107]" />
+            <span className="text-[#ffc107] font-medium text-sm sm:text-base">Why Choose Us</span>
           </span>
 
-          <h2 className="display-medium mb-6 text-foreground">
-            The <span className="gradient-text">Design Engine</span> Advantage
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+            The <span className="text-[#ffc107]">Delhi Campus</span> Advantage
           </h2>
 
-          <p className="text-xl text-foreground/80 leading-relaxed">
-            We don't just teach skills—we transform careers with a proven approach.
+          <p className="text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed px-4">
+            We don't just teach design—we launch elite AVGC careers with a proven studio approach.
           </p>
         </motion.div>
 
-        {/* FEATURES GRID with #ffc107 icons and hover glow */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+        {/* FEATURES GRID - Fixed equal size boxes with left alignment */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-16 md:mb-20 auto-rows-fr">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -126,40 +121,43 @@ const WhyUsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group"
+              className="group h-full"
             >
-              <div className="glass-card p-6 rounded-3xl border border-border/50 transition-all duration-300 hover:shadow-[0_0_20px_#ffc107] hover:border-[#ffc107]/50">
-
-                <div className="mb-5">
-                  <div
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} p-0.5`}
-                  >
-                    <div className="w-full h-full rounded-2xl bg-background/90 flex items-center justify-center">
-                      {/* SAME SIZE FOR ALL ICONS - Set to #ffc107 */}
-                      <feature.icon className="w-6 h-6" style={{ color: "#ffc107" }} />
-                    </div>
+              <div className="h-full p-4 sm:p-5 md:p-6 rounded-2xl md:rounded-3xl bg-[#0a0a0f] border border-[#ffc107]/20 transition-all duration-300 hover:border-[#ffc107] hover:shadow-[0_0_25px_rgba(255,193,7,0.25)] flex flex-col text-left">
+                
+                {/* ICON - Left aligned */}
+                <div className="mb-3 sm:mb-4 md:mb-5 flex-shrink-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg bg-[#0F3D35] flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                    <feature.icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-[#FCC007]" />
                   </div>
                 </div>
 
-                <h3 className="font-bold text-lg mb-3 text-foreground">
+                {/* TITLE */}
+                <h3 className="font-bold text-base sm:text-lg md:text-xl text-white mb-1.5 sm:mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
                   {feature.title}
                 </h3>
 
-                <p className="text-foreground/70 text-sm">
+                {/* DESCRIPTION */}
+                <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed flex-grow">
                   {feature.description}
                 </p>
+
+                {/* STAT - Always at bottom */}
+                <span className="text-[#ffc107] text-xs sm:text-sm font-semibold mt-auto pt-2 block">
+                  {feature.stat}
+                </span>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* DIFFERENTIATORS with #ffc107 icons */}
-        <div className="max-w-4xl mx-auto glass-card p-8 rounded-3xl border border-border/50">
-          <h3 className="text-3xl font-bold text-center mb-10">
-            What Makes Us Different
+        {/* DIFFERENTIATORS - Fixed equal size boxes with left alignment */}
+        <div className="max-w-4xl mx-auto p-5 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl bg-[#0a0a0f] border border-[#ffc107]/20">
+          <h3 className="text-2xl sm:text-3xl md:text-3xl font-bold text-white text-center mb-6 sm:mb-8 md:mb-10">
+            The Design Engine Edge
           </h3>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5 auto-rows-fr">
             {differentiators.map((item, index) => (
               <motion.div
                 key={index}
@@ -167,29 +165,32 @@ const WhyUsSection = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-4 p-4 rounded-2xl bg-muted/30 border border-border/30 transition-all duration-300 hover:shadow-[0_0_15px_#ffc107] hover:border-[#ffc107]/30"
+                className="group h-full"
               >
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-green/20 to-neon-cyan/20 flex items-center justify-center">
+                <div className="h-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl md:rounded-2xl bg-[#030306] border border-[#ffc107]/20 transition-all duration-300 hover:border-[#ffc107] hover:shadow-[0_0_15px_rgba(255,193,7,0.25)]">
                   
-                  {/* SAME SIZE FOR ALL ICONS INCLUDING SMARTPHONE - Set to #ffc107 */}
-                  <item.icon className="w-12 h-5" style={{ color: "#ffc107" }} />
+                  {/* ICON - Left aligned, fixed size */}
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg bg-[#0F3D35] flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
+                    <item.icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-[#FCC007]" />
+                  </div>
 
+                  {/* TEXT - Left aligned with proper wrapping */}
+                  <span className="text-white text-xs sm:text-sm md:text-base font-medium flex-1 leading-relaxed">
+                    {item.text}
+                  </span>
                 </div>
-                <span className="text-white font-medium">
-                  {item.text}
-                </span>
               </motion.div>
             ))}
           </div>
 
           {/* CTA */}
-          <div className="mt-10 text-center">
+          <div className="mt-8 sm:mt-10 md:mt-12 text-center">
             <Button
-              className="neon-button text-white font-bold rounded-full px-10 py-6 text-lg"
+              className="flex items-center justify-center gap-2 mx-auto w-full sm:w-auto min-w-[200px] sm:min-w-[220px] px-6 sm:px-8 md:px-10 py-4 sm:py-5 md:py-6 bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] text-black font-bold rounded-full text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-300"
               onClick={() => setShowEnquiry(true)}
             >
-              <Rocket className="w-5 h-5 mr-2" style={{ color: "#ffc107" }} />
-              Start Your Journey 🚀
+              <Rocket className="w-4 h-4 sm:w-5 sm:h-5" />
+              Join Delhi Campus 🚀
             </Button>
           </div>
         </div>

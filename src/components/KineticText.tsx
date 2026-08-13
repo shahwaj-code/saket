@@ -59,7 +59,7 @@ export const KineticText = ({
         <motion.span
           key={index}
           variants={child}
-          className={`inline-block ${gradient ? 'gradient-text' : ''}`}
+          className={`inline-block ${gradient ? 'bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] bg-clip-text text-transparent' : ''}`}
           style={{ transformStyle: "preserve-3d" }}
         >
           {item}
@@ -70,7 +70,7 @@ export const KineticText = ({
   );
 };
 
-// Glitch text effect
+// Glitch text effect with gold tones
 export const GlitchText = ({ children, className = "" }: { children: ReactNode; className?: string }) => {
   return (
     <motion.span 
@@ -78,7 +78,7 @@ export const GlitchText = ({ children, className = "" }: { children: ReactNode; 
       whileHover="glitch"
     >
       <motion.span
-        className="absolute inset-0 text-neon-cyan"
+        className="absolute inset-0 text-[#ffc107]"
         variants={{
           glitch: {
             x: [0, -3, 3, -2, 2, 0],
@@ -91,7 +91,7 @@ export const GlitchText = ({ children, className = "" }: { children: ReactNode; 
         {children}
       </motion.span>
       <motion.span
-        className="absolute inset-0 text-neon-pink"
+        className="absolute inset-0 text-[#ffd54f]"
         variants={{
           glitch: {
             x: [0, 3, -3, 2, -2, 0],
@@ -103,12 +103,12 @@ export const GlitchText = ({ children, className = "" }: { children: ReactNode; 
       >
         {children}
       </motion.span>
-      <span className="relative">{children}</span>
+      <span className="relative text-white">{children}</span>
     </motion.span>
   );
 };
 
-// Sculptural 3D text with lighting
+// Sculptural 3D text with gold lighting
 export const Sculptural3DText = ({ 
   children, 
   className = "" 
@@ -131,12 +131,13 @@ export const Sculptural3DText = ({
         perspective: "1000px",
         transformStyle: "preserve-3d",
         textShadow: `
-          1px 1px 0 hsl(var(--neon-purple) / 0.3),
-          2px 2px 0 hsl(var(--neon-purple) / 0.25),
-          3px 3px 0 hsl(var(--neon-cyan) / 0.2),
-          4px 4px 0 hsl(var(--neon-cyan) / 0.15),
-          5px 5px 10px hsl(var(--neon-purple) / 0.3)
-        `
+          1px 1px 0 rgba(255, 193, 7, 0.3),
+          2px 2px 0 rgba(255, 193, 7, 0.25),
+          3px 3px 0 rgba(255, 213, 79, 0.2),
+          4px 4px 0 rgba(255, 213, 79, 0.15),
+          5px 5px 10px rgba(255, 179, 0, 0.3)
+        `,
+        color: 'white'
       }}
     >
       {children}

@@ -11,9 +11,8 @@ const adobeCourses = [
     subtitle: "Vector Graphics Mastery",
     description: "Master the industry-standard vector graphics software. Create logos, icons, illustrations, and scalable designs.",
     icon: "Ai",
-    iconBg: "from-[#FF9A00] to-[#FF6100]",
+    iconBg: "from-[#ffc107] via-[#ffd54f] to-[#ffb300]",
     duration: "3 Months",
-    /*students: "2500+",*/
     level: "Beginner to Advanced",
     rating: 4.9,
     tools: ["Pen Tool", "Shape Builder", "Pathfinder", "Type Tool", "Effects"],
@@ -33,9 +32,8 @@ const adobeCourses = [
     subtitle: "Photo Editing & Compositing",
     description: "Learn professional photo editing, retouching, compositing, and digital art creation techniques.",
     icon: "Ps",
-    iconBg: "from-[#31A8FF] to-[#001E36]",
+    iconBg: "from-[#ffd54f] via-[#ffc107] to-[#ffb300]",
     duration: "4 Months",
-    /*students: "3200+",*/
     level: "Beginner to Advanced",
     rating: 4.8,
     tools: ["Layers", "Masks", "Smart Objects", "Camera Raw", "Actions"],
@@ -55,9 +53,8 @@ const adobeCourses = [
     subtitle: "Publication & Layout Design",
     description: "Create stunning print and digital publications, from magazines to interactive PDFs.",
     icon: "Id",
-    iconBg: "from-[#FF3366] to-[#49021F]",
+    iconBg: "from-[#ffb300] via-[#ffd54f] to-[#ffc107]",
     duration: "2 Months",
-    /*students: "1800+",*/
     level: "Beginner to Intermediate",
     rating: 4.7,
     tools: ["Master Pages", "Styles", "Tables", "EPUB", "Interactive PDFs"],
@@ -78,50 +75,75 @@ const AdobeCoursesSection = () => {
   const [showSyllabus, setShowSyllabus] = useState<string | null>(null);
 
   return (
-    <section id="courses" className="py-20 md:py-32 relative overflow-hidden">
+    <section id="courses" className="py-12 md:py-20 lg:py-32 relative overflow-hidden">
       {/* Premium dark background */}
       <div className="absolute inset-0 bg-[#030306]" />
       
-      {/* Gradient orbs */}
+      {/* Golden Orbs - Reduced size on mobile */}
       <motion.div
-        animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-neon-purple/10 rounded-full blur-[100px]"
+        animate={{ x: [0, 60, 0], y: [0, -40, 0] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 left-20 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-[#ffc107]/10 rounded-full blur-[60px] md:blur-[100px]"
       />
       <motion.div
-        animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-neon-cyan/10 rounded-full blur-[80px]"
+        animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-20 right-20 w-[250px] md:w-[420px] h-[250px] md:h-[420px] bg-[#ffd54f]/10 rounded-full blur-[50px] md:blur-[80px]"
       />
 
-      <div className="container relative z-10 px-4">
+      {/* 3D Grid Effect - Reduced opacity on mobile */}
+      <div className="absolute inset-0 opacity-10 md:opacity-15">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,193,7,0.08) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,193,7,0.08) 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px md:60px 60px",
+            transform: "perspective(500px) rotateX(60deg)"
+          }}
+        />
+      </div>
+
+      <div className="container relative z-10 px-3 sm:px-4">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
+          className="text-center max-w-3xl mx-auto mb-8 md:mb-12 lg:mb-16"
         >
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-6"
+          {/* Premium Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-5 py-1.5 md:py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-[#ffc107] mb-4 md:mb-6"
           >
-            <BookOpen className="w-4 h-4 text-neon-cyan" />
-            <span className="text-sm font-medium text-white/80">Industry-Standard Software</span>
-          </motion.span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>
-            <span className="text-white">Master </span>
-            <span className="bg-gradient-to-r from-[#FF9A00] via-[#31A8FF] to-[#FF3366] bg-clip-text text-transparent">Adobe Creative Suite</span>
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+              <BookOpen className="w-3 h-3 md:w-4 md:h-4 text-[#ffc107]" />
+            </motion.div>
+            <span className="text-[10px] md:text-sm font-medium text-white/90 whitespace-nowrap">Industry-Standard Software</span>
+          </motion.div>
+
+          <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 text-white px-2" style={{ fontFamily: 'Syne, sans-serif' }}>
+            Master{" "}
+            <span className="bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] bg-clip-text text-transparent">
+              Adobe Creative Suite
+            </span>
           </h2>
-          <p className="text-white/50 text-lg">
+          <p className="text-white/60 text-xs sm:text-sm md:text-base lg:text-lg px-2">
             Learn from certified instructors with 10+ years of industry experience
           </p>
         </motion.div>
 
         {/* Course Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {adobeCourses.map((course, index) => (
             <motion.div
               key={course.slug}
@@ -134,14 +156,14 @@ const AdobeCoursesSection = () => {
               className="group relative"
             >
               {/* Glassmorphic Card */}
-              <div className="relative h-full rounded-3xl bg-white/[0.03] backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:border-white/20 group-hover:bg-white/[0.05]">
+              <div className="relative h-full rounded-xl md:rounded-3xl bg-white/5 backdrop-blur-xl border border-[#ffc107]/10 overflow-hidden transition-all duration-500 group-hover:border-[#ffc107]/30 group-hover:bg-white/10">
                 {/* Gradient glow on hover */}
                 <motion.div 
-                  className={`absolute inset-0 bg-gradient-to-br ${course.iconBg} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                  className={`absolute inset-0 bg-gradient-to-br ${course.iconBg} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
                 />
 
                 {/* Course Image */}
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-28 sm:h-32 md:h-48 overflow-hidden">
                   <motion.img
                     src={course.image}
                     alt={course.title}
@@ -149,69 +171,67 @@ const AdobeCoursesSection = () => {
                     animate={{ scale: hoveredCourse === course.slug ? 1.1 : 1 }}
                     transition={{ duration: 0.5 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#030306] via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#030306] via-[#030306]/60 to-transparent" />
                   
-                  {/* Software Icon */}
-                  <div className={`absolute top-4 left-4 w-12 h-12 rounded-xl bg-gradient-to-br ${course.iconBg} flex items-center justify-center shadow-lg`}>
-                    <span className="text-white font-bold text-lg">{course.icon}</span>
+                  {/* Software Icon - Smaller on mobile */}
+                  <div className={`absolute top-2 left-2 md:top-4 md:left-4 w-5 h-5 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br ${course.iconBg} flex items-center justify-center shadow-lg border border-[#ffc107]/30`}>
+                    <span className="text-black font-bold text-xs md:text-lg">{course.icon}</span>
                   </div>
 
-                  {/* Rating */}
-                  <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm">
-                    <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-                    <span className="text-sm font-medium text-white">{course.rating}</span>
+                  {/* Rating - Smaller on mobile */}
+                  <div className="absolute top-2 right-2 md:top-4 md:right-4 flex items-center gap-0.5 md:gap-1 px-1.5 md:px-2.5 py-0.5 md:py-1 rounded-full bg-black/60 backdrop-blur-sm border border-[#ffc107]/20">
+                    <Star className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-[#ffc107] fill-[#ffc107]" />
+                    <span className="text-[10px] md:text-sm font-medium text-white">{course.rating}</span>
                   </div>
                 </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <span className="text-xs font-medium text-white/40 uppercase tracking-wider">{course.subtitle}</span>
-                  <h3 className="text-xl font-bold text-white mt-1 mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>{course.title}</h3>
-                  <p className="text-white/50 text-sm mb-4 line-clamp-2">{course.description}</p>
+                {/* Content - Reduced padding on mobile */}
+                <div className="p-3 md:p-6">
+                  <span className="text-[8px] md:text-xs font-medium text-white/40 uppercase tracking-wider">{course.subtitle}</span>
+                  <h3 className="text-sm sm:text-base md:text-xl font-bold text-white mt-0.5 md:mt-1 mb-1 md:mb-2 group-hover:text-[#ffc107] transition-colors" style={{ fontFamily: 'Syne, sans-serif' }}>
+                    {course.title}
+                  </h3>
+                  <p className="text-white/50 text-[10px] md:text-sm mb-2 md:mb-4 line-clamp-2">{course.description}</p>
 
-                  {/* Meta Info */}
-                  <div className="flex flex-wrap gap-3 mb-4">
-                    <div className="flex items-center gap-1.5 text-xs text-white/40">
-                      <Clock className="w-3.5 h-3.5" />
+                  {/* Meta Info - Smaller icons on mobile */}
+                  <div className="flex flex-wrap gap-2 md:gap-3 mb-2 md:mb-4">
+                    <div className="flex items-center gap-1 md:gap-1.5 text-[8px] md:text-xs text-white/60">
+                      <Clock className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-[#ffc107]" />
                       {course.duration}
                     </div>
-                    {/*<div className="flex items-center gap-1.5 text-xs text-white/40">
-                      <Users className="w-3.5 h-3.5" />
-                      {course.students}
-                    </div>*/}
-                    <div className="flex items-center gap-1.5 text-xs text-white/40">
-                      <BookOpen className="w-3.5 h-3.5" />
+                    <div className="flex items-center gap-1 md:gap-1.5 text-[8px] md:text-xs text-white/60">
+                      <BookOpen className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-[#ffd54f]" />
                       {course.projects} Projects
                     </div>
                   </div>
 
-                  {/* Tools Preview */}
-                  <div className="flex flex-wrap gap-1.5 mb-5">
+                  {/* Tools Preview - Smaller on mobile */}
+                  <div className="flex flex-wrap gap-1 md:gap-1.5 mb-2 md:mb-5">
                     {course.tools.slice(0, 4).map((tool, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 text-xs rounded-full bg-white/5 text-white/60 border border-white/10"
+                        className="px-1.5 md:px-2 py-0.5 text-[8px] md:text-xs rounded-full bg-white/5 text-white/60 border border-[#ffc107]/10 whitespace-nowrap"
                       >
                         {tool}
                       </span>
                     ))}
                     {course.tools.length > 4 && (
-                      <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 text-white/40">
+                      <span className="px-1.5 md:px-2 py-0.5 text-[8px] md:text-xs rounded-full bg-white/5 text-white/40 border border-[#ffc107]/10">
                         +{course.tools.length - 4}
                       </span>
                     )}
                   </div>
 
-                  {/* Syllabus Preview Toggle */}
+                  {/* Syllabus Preview Toggle - Smaller on mobile */}
                   <motion.button
                     onClick={() => setShowSyllabus(showSyllabus === course.slug ? null : course.slug)}
-                    className="w-full mb-4 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium text-white/70 hover:text-white transition-all flex items-center justify-center gap-2"
+                    className="w-full mb-2 md:mb-4 px-2 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl bg-white/5 hover:bg-white/10 border border-[#ffc107]/10 text-[10px] md:text-sm font-medium text-white/70 hover:text-[#ffc107] transition-all flex items-center justify-center gap-1 md:gap-2"
                   >
-                    <BookOpen className="w-4 h-4" />
-                    {showSyllabus === course.slug ? "Hide Syllabus" : "View Syllabus Preview"}
+                    <BookOpen className="w-3 h-3 md:w-4 md:h-4 text-[#ffc107]" />
+                    {showSyllabus === course.slug ? "Hide" : "View Syllabus"}
                   </motion.button>
 
-                  {/* Syllabus Dropdown */}
+                  {/* Syllabus Dropdown - Smaller on mobile */}
                   <motion.div
                     initial={false}
                     animate={{ 
@@ -220,32 +240,32 @@ const AdobeCoursesSection = () => {
                     }}
                     className="overflow-hidden"
                   >
-                    <div className="pb-4 space-y-2">
+                    <div className="pb-2 md:pb-4 space-y-1 md:space-y-2">
                       {course.syllabus.map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-white/60">
-                          <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${course.iconBg}`} />
+                        <div key={i} className="flex items-center gap-1 md:gap-2 text-[9px] md:text-sm text-white/60">
+                          <span className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-gradient-to-r ${course.iconBg}`} />
                           {item}
                         </div>
                       ))}
                     </div>
                   </motion.div>
 
-                  {/* Actions */}
-                  <div className="flex gap-2">
+                  {/* Actions - Smaller buttons on mobile */}
+                  <div className="flex gap-1.5 md:gap-2">
                     <Link to={`/course/${course.slug}`} className="flex-1">
                       <Button 
-                        className={`w-full bg-gradient-to-r ${course.iconBg} text-white font-semibold rounded-xl hover:opacity-90 transition-opacity`}
+                        className={`w-full bg-gradient-to-r ${course.iconBg} text-black font-bold rounded-lg md:rounded-xl text-[10px] md:text-sm py-1.5 md:py-2 px-2 md:px-4 hover:shadow-[0_0_20px_rgba(255,193,7,0.5)] transition-all duration-300`}
                       >
-                        {/* Explore Course */}
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        Explore
+                        <ArrowRight className="w-2.5 h-2.5 md:w-4 md:h-4 ml-1 md:ml-2 text-black" />
                       </Button>
                     </Link>
                     <Button 
                       variant="outline"
                       size="icon"
-                      className="rounded-xl border-white/10 hover:bg-white/5"
+                      className="rounded-lg md:rounded-xl border-[#ffc107]/20 hover:bg-white/5 hover:border-[#ffc107]/40 w-7 h-7 md:w-10 md:h-10"
                     >
-                      <Play className="w-4 h-4" />
+                      <Play className="w-3 h-3 md:w-4 md:h-4 text-[#ffc107]" />
                     </Button>
                   </div>
                 </div>
@@ -254,21 +274,21 @@ const AdobeCoursesSection = () => {
           ))}
         </div>
 
-        {/* View All Courses */}
+        {/* View All Courses - Smaller on mobile */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          className="text-center mt-8 md:mt-12"
         >
           <Link to="/courses">
             <Button 
               size="lg"
-              className="bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold rounded-full px-8"
+              className="bg-white/5 backdrop-blur-sm border border-[#ffc107]/20 hover:bg-white/10 hover:border-[#ffc107]/50 text-white font-semibold rounded-full px-4 md:px-8 py-2 md:py-3 text-xs md:text-base group transition-all duration-300"
             >
               View All 15+ Courses
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-1 md:ml-2 text-[#ffc107] group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
         </motion.div>

@@ -1,394 +1,344 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
-import { Calendar, Clock, User, ArrowRight, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Link, useParams } from "react-router-dom";
+import { 
+  Calendar, 
+  ArrowLeft, 
+  Twitter, 
+  Linkedin, 
+  Facebook, 
+  Link as LinkIcon
+} from "lucide-react";
+import { toast } from "sonner";
+import { blogs } from "@/data/blogs";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BlogDetail from "@/components/BlogDetail";
 
-const blogPosts = [
-  {
-    id: 1,
-    slug: "future-of-ai-in-design-2025",
-    title: "The Future of AI in Design: What to Expect in 2025",
-    excerpt: "Explore how generative AI is reshaping the creative industry and what skills you need to stay ahead of the curve. From Midjourney to Stable Diffusion, we break down the tools transforming design.",
-    content: "Full article content here...",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=500&fit=crop",
-    category: "AI & Design",
-    author: "Vikram Sharma",
-    authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-    date: "Dec 28, 2024",
-    readTime: "8 min read",
-    featured: true,
-  },
-  {
-    id: 2,
-    slug: "mastering-midjourney-prompts",
-    title: "Mastering Midjourney: 10 Prompt Engineering Secrets",
-    excerpt: "Learn the advanced techniques our instructors use to create stunning AI-generated artwork consistently. These prompt strategies will level up your AI art game.",
-    content: "Full article content here...",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=500&fit=crop",
-    category: "Tutorial",
-    author: "Ananya Gupta",
-    authorImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
-    date: "Dec 22, 2024",
-    readTime: "12 min read",
-    featured: false,
-  },
-  {
-    id: 3,
-    slug: "vfx-career-guide-india",
-    title: "Complete VFX Career Guide: From Beginner to Supervisor",
-    excerpt: "A comprehensive roadmap to building a successful VFX career in India's booming entertainment industry. Salary insights, skill requirements, and growth opportunities.",
-    content: "Full article content here...",
-    image: "https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&h=500&fit=crop",
-    category: "Career",
-    author: "Karan Verma",
-    authorImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
-    date: "Dec 18, 2024",
-    readTime: "15 min read",
-    featured: true,
-  },
-  {
-    id: 4,
-    slug: "figma-design-systems-2024",
-    title: "Building Scalable Design Systems in Figma",
-    excerpt: "Step-by-step guide to creating enterprise-grade design systems used by top product teams. Learn component architecture, tokens, and documentation best practices.",
-    content: "Full article content here...",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=500&fit=crop",
-    category: "UI/UX",
-    author: "Priya Sharma",
-    authorImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
-    date: "Dec 15, 2024",
-    readTime: "10 min read",
-    featured: false,
-  },
-  {
-    id: 5,
-    slug: "unreal-engine-5-beginners",
-    title: "Getting Started with Unreal Engine 5: A Beginner's Guide",
-    excerpt: "Everything you need to know to start creating stunning real-time visuals with Unreal Engine 5. From installation to your first render.",
-    content: "Full article content here...",
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=500&fit=crop",
-    category: "Tutorial",
-    author: "Arjun Mehta",
-    authorImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
-    date: "Dec 10, 2024",
-    readTime: "18 min read",
-    featured: false,
-  },
-  {
-    id: 6,
-    slug: "motion-design-trends-2025",
-    title: "Motion Design Trends to Watch in 2025",
-    excerpt: "From 3D typography to AI-enhanced animations, discover the motion design trends that will dominate brand content and digital experiences next year.",
-    content: "Full article content here...",
-    image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=500&fit=crop",
-    category: "Industry Trends",
-    author: "Sneha Patel",
-    authorImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop",
-    date: "Dec 5, 2024",
-    readTime: "7 min read",
-    featured: false,
-  },
-];
+interface BlogPost {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  category: string;
+  date: string;
+}
 
-const categories = ["All", "AI & Design", "Tutorial", "Career", "UI/UX", "Industry Trends"];
-
-const Blog = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  // If slug is provided, show blog detail
-  if (slug) {
-    const post = blogPosts.find(p => p.slug === slug);
-    if (post) {
-      const relatedPosts = blogPosts.filter(p => 
-        p.id !== post.id && (p.category === post.category || p.featured)
-      );
-      return (
-        <>
-          <Helmet>
-            <title>{post.title} | CreativeTech Institute Blog</title>
-            <meta name="description" content={post.excerpt} />
-            <meta property="og:title" content={post.title} />
-            <meta property="og:description" content={post.excerpt} />
-            <meta property="og:image" content={post.image} />
-            <meta property="og:type" content="article" />
-          </Helmet>
-          <div className="min-h-screen bg-background text-foreground">
-            <Navbar />
-            <main className="pt-20">
-              <BlogDetail post={post} relatedPosts={relatedPosts} />
-            </main>
-            <Footer />
-          </div>
-        </>
-      );
-    }
-  }
-
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = 
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === "All" || post.category === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const featuredPost = blogPosts.find(post => post.featured);
-
+const BlogListView = () => {
   return (
-    <>
-      <Helmet>
-        <title>Blog | CreativeTech Institute - AI, VFX & Design Insights</title>
-        <meta 
-          name="description" 
-          content="Explore tutorials, career guides, and industry insights on Generative AI, VFX, Motion Graphics, and UI/UX Design from CreativeTech experts." 
-        />
-      </Helmet>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        <section className="py-16 md:py-24 bg-background">
+          <div className="container px-4 md:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-3xl mx-auto text-center mb-16"
+            >
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog & Insights</h1>
+              <p className="text-lg text-muted-foreground">
+                Discover the latest insights on animation, VFX, game development, and creative careers.
+              </p>
+            </motion.div>
 
-      <div className="min-h-screen bg-background text-foreground">
-        <Navbar />
-
-        <main className="pt-20">
-          {/* Hero Section */}
-          <section className="py-16 md:py-24 border-b border-border relative overflow-hidden">
-            {/* Mesh gradient background */}
-            <div className="absolute inset-0 mesh-gradient opacity-30" />
-            
-            <div className="container relative z-10 px-4 md:px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center max-w-3xl mx-auto mb-12"
-              >
-                <span className="inline-block px-4 py-1.5 rounded-full glassmorphic-button text-primary text-sm font-medium mb-4">
-                  📚 Knowledge Hub
-                </span>
-                <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                  Insights & <span className="gradient-text">Tutorials</span>
-                </h1>
-                <p className="text-lg text-muted-foreground">
-                  Stay ahead with the latest in AI art, VFX techniques, design trends, and career advice from industry experts.
-                </p>
-              </motion.div>
-
-              {/* Search & Filter */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="max-w-4xl mx-auto"
-              >
-                <div className="relative mb-6">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffc107]" />
-                  <input
-                    type="text"
-                    placeholder="Search articles..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-secondary border border-border focus:border-[#ffc107] focus:ring-2 focus:ring-[#ffc107]/20 outline-none transition-all"
-                  />
-                </div>
-
-                <div className="flex flex-wrap justify-center gap-2">
-                  {categories.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setActiveCategory(cat)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                        activeCategory === cat
-                          ? "glassmorphic-button text-foreground shadow-lg border border-[#ffc107]/30"
-                          : "bg-secondary text-muted-foreground hover:bg-secondary/80 border border-transparent hover:border-[#ffc107]/20"
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          </section>
-
-          {/* Featured Post */}
-          {featuredPost && activeCategory === "All" && !searchQuery && (
-            <section className="py-16 border-b border-border">
-              <div className="container px-4 md:px-6">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {blogs.map((post, index) => (
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  viewport={{ once: true }}
+                  key={post.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  <Link to={`/blog/${featuredPost.slug}`}>
-                    <div className="grid lg:grid-cols-2 gap-8 items-center group">
-                      <div className="relative overflow-hidden rounded-3xl">
+                  <Link to={`/blog/${post.slug}`} className="group h-full block">
+                    <div className="bg-card rounded-xl overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300 border border-border">
+                      <div className="relative aspect-video overflow-hidden bg-muted">
                         <img
-                          src={featuredPost.image}
-                          alt={featuredPost.title}
-                          className="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-500"
+                          src={post.image}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 rounded-full glassmorphic-button text-sm font-medium">
-                            Featured
-                          </span>
-                        </div>
                       </div>
-                      <div className="lg:pl-8">
-                        <span className="text-sm text-primary font-medium">{featuredPost.category}</span>
-                        <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 group-hover:text-[#ffc107] transition-colors">
-                          {featuredPost.title}
-                        </h2>
-                        <p className="text-lg text-muted-foreground mb-6">
-                          {featuredPost.excerpt}
+                      <div className="p-6 flex-1 flex flex-col">
+                        <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3 w-fit">
+                          {post.category}
+                        </span>
+                        <h3 className="font-bold text-xl mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                          {post.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mb-4 flex-1">
+                          {post.excerpt}
                         </p>
-                        <div className="flex items-center gap-4">
-                          <img 
-                            src={featuredPost.authorImage} 
-                            alt={featuredPost.author}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-[#ffc107]/30"
-                          />
-                          <div>
-                            <p className="font-medium">{featuredPost.author}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {featuredPost.date} · {featuredPost.readTime}
-                            </p>
-                          </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-auto pt-4 border-t border-border">
+                          <Calendar className="w-4 h-4" />
+                          <span>{post.date}</span>
                         </div>
                       </div>
                     </div>
                   </Link>
                 </motion.div>
-              </div>
-            </section>
-          )}
-
-          {/* Blog Grid */}
-          <section className="py-16">
-            <div className="container px-4 md:px-6">
-              {filteredPosts.length === 0 ? (
-                <div className="text-center py-16">
-                  <p className="text-muted-foreground text-lg">
-                    No articles found matching your search. Try different keywords.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredPosts.map((post, index) => (
-                    <motion.article
-                      key={post.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                    >
-                      <Link to={`/blog/${post.slug}`} className="group block h-full">
-                        <div className="apple-card overflow-hidden h-full flex flex-col border border-transparent hover:border-[#ffc107]/20 transition-all duration-300">
-                          <div className="relative aspect-video overflow-hidden">
-                            <img
-                              src={post.image}
-                              alt={post.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                            <div className="absolute top-3 left-3">
-                              <span className="px-3 py-1 rounded-full bg-background/90 backdrop-blur-sm text-sm font-medium border border-[#ffc107]/20">
-                                {post.category}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <div className="p-6 flex-1 flex flex-col">
-                            <h3 className="text-xl font-bold mb-3 line-clamp-2 group-hover:text-[#ffc107] transition-colors">
-                              {post.title}
-                            </h3>
-                            <p className="text-muted-foreground line-clamp-2 mb-4 flex-1">
-                              {post.excerpt}
-                            </p>
-                            
-                            <div className="flex items-center justify-between pt-4 border-t border-border">
-                              <div className="flex items-center gap-2">
-                                <img 
-                                  src={post.authorImage} 
-                                  alt={post.author}
-                                  className="w-8 h-8 rounded-full object-cover ring-1 ring-[#ffc107]/30"
-                                />
-                                <span className="text-sm text-muted-foreground">{post.author}</span>
-                              </div>
-                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                  <Calendar className="w-3 h-3 text-[#ffc107]" />
-                                  {post.date}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <Clock className="w-3 h-3 text-[#ffc107]" />
-                                  {post.readTime}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </motion.article>
-                  ))}
-                </div>
-              )}
-
-              {/* Load More */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                viewport={{ once: true }}
-                className="text-center mt-12"
-              >
-                <Button variant="outline" size="lg" className="glassmorphic-button border-[#ffc107]/20 hover:border-[#ffc107]/40">
-                  Load More Articles
-                  <ArrowRight className="w-4 h-4 text-[#ffc107]" />
-                </Button>
-              </motion.div>
+              ))}
             </div>
-          </section>
-
-          {/* Newsletter Section */}
-          <section className="py-16 bg-muted/30 relative overflow-hidden">
-            <div className="absolute inset-0 mesh-gradient opacity-20" />
-            <div className="container relative z-10 px-4 md:px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="max-w-2xl mx-auto text-center"
-              >
-                <h2 className="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-                <p className="text-muted-foreground mb-8">
-                  Get weekly insights on AI art, VFX tutorials, and career tips delivered to your inbox.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="flex-1 px-5 py-3 rounded-full bg-background border border-[#ffc107]/20 focus:border-[#ffc107] focus:ring-2 focus:ring-[#ffc107]/20 outline-none transition-all"
-                  />
-                  <Button variant="apple" size="lg" className="rounded-full border border-transparent hover:border-[#ffc107]/30">
-                    Subscribe
-                  </Button>
-                </div>
-              </motion.div>
-            </div>
-          </section>
-        </main>
-
-        <Footer />
-      </div>
-    </>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
-export default Blog;
+const BlogDetailView = ({ post }: { post: BlogPost }) => {
+  const relatedPosts = blogs.filter((b) => b.id !== post.id).slice(0, 3);
+  const shareUrl = window.location.href;
+
+  const handleShare = (platform: string) => {
+    const urls: Record<string, string> = {
+      twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+    };
+
+    if (platform === 'copy') {
+      navigator.clipboard.writeText(shareUrl);
+      toast.success('Link copied to clipboard!');
+      return;
+    }
+
+    window.open(urls[platform], '_blank', 'width=600,height=400');
+  };
+
+  const convertContentToHtml = (content: string) => {
+    if (!content) return "";
+    
+    return content
+      .split("\n\n")
+      .map((block, idx) => {
+        if (block.startsWith("## ")) {
+          return `<h2 class="text-2xl md:text-3xl font-bold mt-12 mb-4 pb-2">${block.replace("## ", "")}</h2>`;
+        }
+        if (block.startsWith("### ")) {
+          return `<h3 class="text-xl md:text-2xl font-semibold mt-8 mb-3">${block.replace("### ", "")}</h3>`;
+        }
+        if (block.startsWith("> ")) {
+          return `<blockquote class="pl-4 border-l-4 border-primary italic text-muted-foreground my-6 py-2">${block.replace("> ", "")}</blockquote>`;
+        }
+        if (block.trim().startsWith("- ")) {
+          const items = block
+            .split("\n")
+            .filter((line) => line.trim().startsWith("- "))
+            .map((line) => `<li class="mb-2">${line.replace("- ", "")}</li>`)
+            .join("");
+          return `<ul class="list-disc list-inside space-y-2 my-6 ml-4">${items}</ul>`;
+        }
+        return `<p class="text-lg leading-relaxed mb-6 text-muted-foreground">${block.replace(/\n/g, "<br/>")}</p>`;
+      })
+      .join("");
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        <article className="py-12 md:py-20">
+          <div className="w-full px-4 md:px-6 max-w-[1400px] mx-auto">
+            {/* Back Link */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="mb-8"
+            >
+              <Link 
+                to="/blog" 
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                Back to Blog
+              </Link>
+            </motion.div>
+
+            <div className="grid lg:grid-cols-3 gap-12">
+              {/* Main Content */}
+              <div className="lg:col-span-2">
+                {/* Header */}
+                <motion.header
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="mb-8"
+                >
+                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                    {post.category}
+                  </span>
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                    {post.title}
+                  </h1>
+                  
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {post.date}
+                    </span>
+                  </div>
+                </motion.header>
+
+                {/* Featured Image */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="relative aspect-video rounded-2xl overflow-hidden mb-10 shadow-lg"
+                >
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+
+                {/* Article Content */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="prose prose-lg dark:prose-invert max-w-none"
+                >
+                  <div
+                    dangerouslySetInnerHTML={{ __html: convertContentToHtml(post.content) }}
+                    className="[&>p]:text-lg [&>p]:leading-relaxed [&>p]:mb-6 [&>p]:text-muted-foreground [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:mt-12 [&>h2]:mb-4 [&>h2]:pb-2 [&>h3]:text-2xl [&>h3]:font-semibold [&>h3]:mt-8 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:list-inside [&>ul]:space-y-2 [&>ul]:my-6 [&>ul]:ml-4 [&>blockquote]:pl-4 [&>blockquote]:border-l-4 [&>blockquote]:border-primary [&>blockquote]:italic [&>blockquote]:text-muted-foreground [&>blockquote]:my-6 [&>blockquote]:py-2"
+                  />
+                </motion.div>
+
+                {/* Share Buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="flex flex-col items-start gap-4 pt-8 mt-12"
+                >
+                  <span className="text-lg font-semibold text-white">
+                    Share this article:
+                  </span>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => handleShare('twitter')}
+                      aria-label="Share on Twitter"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-300 group hover:animate-[shake_0.5s_ease-in-out]"
+                      style={{ backgroundColor: '#0f3d35' }}
+                    >
+                      <Twitter className="w-4 h-4" style={{ color: '#ffc107' }} />
+                    </button>
+                    <button
+                      onClick={() => handleShare('linkedin')}
+                      aria-label="Share on LinkedIn"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-300 group hover:animate-[shake_0.5s_ease-in-out]"
+                      style={{ backgroundColor: '#0f3d35' }}
+                    >
+                      <Linkedin className="w-4 h-4" style={{ color: '#ffc107' }} />
+                    </button>
+                    <button
+                      onClick={() => handleShare('facebook')}
+                      aria-label="Share on Facebook"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-300 group hover:animate-[shake_0.5s_ease-in-out]"
+                      style={{ backgroundColor: '#0f3d35' }}
+                    >
+                      <Facebook className="w-4 h-4" style={{ color: '#ffc107' }} />
+                    </button>
+                    <button
+                      onClick={() => handleShare('copy')}
+                      aria-label="Copy link"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-300 group hover:animate-[shake_0.5s_ease-in-out]"
+                      style={{ backgroundColor: '#0f3d35' }}
+                    >
+                      <LinkIcon className="w-4 h-4" style={{ color: '#ffc107' }} />
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Sidebar - Related Posts */}
+              <aside className="lg:col-span-1">
+                <div className="sticky top-28">
+                  <motion.div
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="bg-card rounded-xl border border-border p-6"
+                  >
+                    <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+                      <span className="w-1 h-6 bg-primary rounded-full"></span>
+                      Related Articles
+                    </h3>
+                    <div className="space-y-5">
+                      {relatedPosts.map((related) => (
+                        <Link 
+                          key={related.id} 
+                          to={`/blog/${related.slug}`}
+                          className="block group"
+                        >
+                          <div className="flex gap-4">
+                            <img 
+                              src={related.image} 
+                              alt={related.title}
+                              className="w-20 h-20 rounded-xl object-cover flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors mb-2">
+                                {related.title}
+                              </p>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <Calendar className="w-3 h-3" />
+                                <span>{related.date}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </article>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default function Blog() {
+  const { slug } = useParams<{ slug?: string }>();
+
+  if (!slug) {
+    return <BlogListView />;
+  }
+
+  const post = blogs.find((b) => b.slug === slug);
+
+  if (!post) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center py-16 px-4">
+            <div className="text-6xl mb-6">🔍</div>
+            <h1 className="text-3xl font-bold mb-4">Blog post not found</h1>
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+              Sorry, we couldn't find the article you're looking for. It might have been moved or deleted.
+            </p>
+            <Link 
+              to="/blog" 
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full hover:bg-primary/90 transition-all"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Blog
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  return <BlogDetailView post={post} />;
+}

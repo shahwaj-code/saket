@@ -1,3 +1,5 @@
+Sitemap: https://BASE_URL/sitemap.xml
+
 User-agent: Googlebot
 Allow: /
 

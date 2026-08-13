@@ -19,30 +19,30 @@ const careerFeatures = [
   {
     icon: FileCheck,
     title: "Portfolio Reviews",
-    description: "Get your portfolio reviewed by industry experts from DNEG, Technicolor, and Prime Focus.",
-    stats: "500+ Reviews/Month",
-    color: "from-neon-purple to-[#4361EE]",
+    description: "Get your industry showreel evaluated by Delhi's elite design mentors every 60 days.",
+    stats: "500+ Reviews/60 Days",
+    color: "from-[#ffc107] to-[#ffb300]",
   },
   {
     icon: Briefcase,
     title: "Placement Assistance",
     description: "Dedicated placement cell with direct connections to 1000+ hiring partners across India.",
-    stats: "95% Placement Rate",
-    color: "from-neon-cyan to-neon-green",
+    stats: "100%* Live Campus Drives",
+    color: "from-[#ffd54f] to-[#ffc107]",
   },
   {
     icon: Users,
     title: "Mock Interviews",
-    description: "Practice with HR professionals and technical experts to ace your interviews.",
+    description: "Practice with local corporate HR managers and lead technical directors to ace actual studio rounds.",
     stats: "3 Rounds Prep",
-    color: "from-[#4361EE] to-neon-cyan",
+    color: "from-[#ffb300] to-[#ffd54f]",
   },
   {
     icon: Building2,
     title: "Industry Internships",
-    description: "Get hands-on experience with paid internships at top studios during your course.",
+    description: "Gain industry experience through structured paid apprenticeships at premium media firms during your batch.",
     stats: "6-Month Programs",
-    color: "from-neon-orange to-neon-pink",
+    color: "from-[#ffc107] to-[#ffd54f]",
   },
   
 ];
@@ -57,9 +57,9 @@ const placementPartners = [
 ];
 
 const successMetrics = [
-  { value: "₹12L", label: "Highest Package", icon: Star },
-  { value: "100%*", label: "Internship Guarantee", icon: Target },
-  { value: "1000+", label: "Hiring Partners", icon: Building2 },
+  { value: "₹12L", label: "Top Studio Offer", icon: Star },
+  { value: "100%*", label: "Delhi Internship Aid", icon: Target },
+  { value: "1000+", label: "Hiring Network", icon: Building2 },
   { value: "95%", label: "Placement Rate", icon: GraduationCap },
 ];
 
@@ -67,17 +67,51 @@ const CareerSupportSection = () => {
   const [showEnquiry, setShowEnquiry] = useState(false);
 
   return (
-    <section id="careers" className="py-20 md:py-32 relative overflow-hidden">
+    <section id="careers" className="py-12 md:py-20 relative overflow-hidden">
       {/* Premium dark background */}
       <div className="absolute inset-0 bg-[#030306]" />
       
-      {/* Gradient mesh with amber glow */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-neon-purple/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-neon-cyan/15 rounded-full blur-[100px]" />
-        {/* Amber glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#ffc107]/10 rounded-full blur-[100px]" />
+      {/* Golden Orbs */}
+      <motion.div
+        animate={{ x: [0, 60, 0], y: [0, -40, 0] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 left-20 w-[600px] h-[600px] bg-[#ffc107]/10 rounded-full blur-[120px]"
+      />
+      <motion.div
+        animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-20 right-20 w-[500px] h-[500px] bg-[#ffd54f]/10 rounded-full blur-[100px]"
+      />
+      <motion.div
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.15, 0.1]
+        }}
+        transition={{ 
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#ffb300]/10 rounded-full blur-[100px]"
+      />
+
+      {/* 3D Grid Effect */}
+      <div className="absolute inset-0 opacity-15">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,193,7,0.08) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,193,7,0.08) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+            transform: "perspective(500px) rotateX(60deg)"
+          }}
+        />
       </div>
+
+      {/* Golden Gradient Overlay */}
+      <div className="absolute inset-0 mix-blend-overlay bg-gradient-to-br from-[#ffc107]/20 via-transparent to-[#ffd54f]/10" />
 
       <div className="container relative z-10 px-4">
         {/* Section Header */}
@@ -86,23 +120,28 @@ const CareerSupportSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
         >
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-6"
+          {/* Premium Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-[#ffc107] mb-5"
           >
-            <Rocket className="w-4 h-4 text-[#ffc107]" />
-            <span className="text-sm font-medium text-white/80">Your Career Partner</span>
-          </motion.span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>
-            <span className="text-white">Career </span>
-            <span className="bg-gradient-to-r from-[#ffc107] via-[#ffc107] to-[#ffc107] bg-clip-text text-transparent">Support</span>
-            <span className="text-white"> & Placement</span>
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+              <Rocket className="w-3.5 h-3.5 text-[#ffc107]" />
+            </motion.div>
+            <span className="text-xs font-medium text-white/90">Your Delhi Career Partner</span>
+          </motion.div>
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-3 text-white" style={{ fontFamily: 'Syne, sans-serif' }}>
+            Delhi Campus Placements
           </h2>
-          <p className="text-white/50 text-lg">
-            We don't just teach—we launch careers. Our dedicated team ensures you land your dream job.
+          <p className="text-white/60 text-sm md:text-lg px-4">
+            We don't just teach—we launch AVGC careers. Our specialized local team connects you to Delhi NCR's top studios.
           </p>
         </motion.div>
 
@@ -112,25 +151,29 @@ const CareerSupportSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-12 md:mb-16"
         >
           {successMetrics.map((metric, index) => (
             <motion.div
               key={index}
               whileHover={{ y: -5 }}
-              className="relative p-6 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 text-center group hover:border-white/20 transition-all"
+              className="relative px-2 py-3 sm:p-6 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur-xl border border-[#ffc107]/10 text-center group hover:border-[#ffc107]/30 transition-all duration-300"
             >
-              <metric.icon className="w-8 h-8 mx-auto mb-3 text-[#ffc107]" />
-              <div className="text-3xl md:text-4xl font-bold mb-1">
-                <span className="bg-gradient-to-r from-white to-[#ffc107] bg-clip-text text-transparent">{metric.value}</span>
+              <metric.icon className="w-5 h-5 sm:w-8 sm:h-8 mx-auto mb-1.5 text-[#ffc107]" />
+
+              <div className="text-base sm:text-2xl md:text-3xl font-bold mb-0.5 bg-gradient-to-r from-[#ffc107] to-[#ffb300] bg-clip-text text-transparent whitespace-nowrap">
+                {metric.value}
               </div>
-              <div className="text-sm text-white/50">{metric.label}</div>
+
+              <div className="text-[10px] sm:text-sm text-white/60 leading-tight">
+                {metric.label}
+              </div>
             </motion.div>
-          ))}
+          ))} 
         </motion.div>
 
         {/* Feature Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-16">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6 mb-12 md:mb-16">
           {careerFeatures.map((feature, index) => (
             <motion.div
               key={index}
@@ -140,26 +183,35 @@ const CareerSupportSection = () => {
               viewport={{ once: true }}
               className="group relative"
             >
-              <div className="relative p-6 md:p-8 rounded-3xl bg-white/[0.03] backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:border-white/20 group-hover:bg-white/[0.05]">
+              <div className="relative p-4 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 backdrop-blur-xl border border-[#ffc107]/10 overflow-hidden transition-all duration-500 group-hover:border-[#ffc107]/30 group-hover:bg-white/10 group-hover:shadow-[0_0_30px_rgba(255,193,7,0.15)]">
                 {/* Gradient glow */}
                 <motion.div 
-                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
                 />
 
-                <div className="relative flex items-start gap-5">
-                  {/* Icon with amber color */}
-                  <div className={`flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-lg`}>
-                    <feature.icon className="w-7 h-7 text-[#ffc107]" />
+                <div className="relative flex flex-col sm:flex-row items-start gap-3 sm:gap-5">
+                  {/* Icon with gold gradient */}
+                  <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-lg border border-[#ffc107]/30`}>
+                    <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                   </div>
 
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-bold text-white" style={{ fontFamily: 'Syne, sans-serif' }}>{feature.title}</h3>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-[#ffc107] text-black`}>
+                  <div className="flex-1 w-full">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
+                      <h3
+                        className="text-base sm:text-lg md:text-xl font-semibold sm:font-bold text-white group-hover:text-[#ffc107] transition-colors"
+                        style={{ fontFamily: "Syne, sans-serif" }}
+                      >
+                        {feature.title}
+                      </h3>
+
+                      <span className="self-start sm:self-auto px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-gradient-to-r from-[#ffc107] to-[#ffb300] text-black whitespace-nowrap">
                         {feature.stats}
                       </span>
                     </div>
-                    <p className="text-white/50">{feature.description}</p>
+
+                    <p className="text-white/60 group-hover:text-white/80 transition-colors text-xs sm:text-sm md:text-base">
+                      {feature.description}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -173,27 +225,29 @@ const CareerSupportSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-neon-purple/10 to-neon-cyan/10 border border-white/10 mb-16 overflow-hidden"
+          className="relative p-5 md:p-12 rounded-2xl md:rounded-3xl bg-gradient-to-br from-[#ffc107]/5 via-[#ffd54f]/5 to-[#ffb300]/5 border border-[#ffc107]/20 mb-12 md:mb-16 overflow-hidden"
         >
-          {/* Amber accent line */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffc107] to-transparent" />
+          {/* Gold accent line */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffc107] to-[#ffd54f] to-transparent" />
           
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center" style={{ fontFamily: 'Syne, sans-serif' }}>
+          <h3 className="text-xl md:text-3xl font-bold text-white mb-6 md:mb-8 text-center" style={{ fontFamily: 'Syne, sans-serif' }}>
             What's Included in Career Support
           </h3>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {[
-              "1-on-1 Portfolio Review Sessions",
-              "Resume & Cover Letter Building",
+              "1-on-1 Studio Portfolio Review",
+              "ATS-Friendly Resume Building",
               "LinkedIn Profile Optimization",
-              "Technical Interview Preparation",
-              "HR Round Mock Interviews",
-              "Job Portal Access (1000+ Companies)",
-              "Industry Networking Events",
-              "Alumni Mentorship Program",
-              "Lifetime Career Support",
-              "DE Student App\nAccess lessons, notes, exams, and certifications anytime, anywhere.",
+              "Studio Technical Interview Prep",
+              "Corporate HR Mock Interviews",
+              "Exclusive Job Portal Access",
+              "Delhi NCR Studio Networking",
+              "Design Engine Alumni Mentorship",
+              "Lifetime Career Placement Aid",
+              "Placement Alert Student App",
+              "Creative Soft Skills Workshops",
+              "Live Production House Masterclasses"
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -201,9 +255,9 @@ const CareerSupportSection = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-3 text-white/70"
+                className="flex items-center gap-2 text-white/80 hover:text-[#ffc107] transition-colors text-xs sm:text-sm"
               >
-                <CheckCircle className="w-5 h-5 text-[#ffc107] flex-shrink-0" />
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#ffc107] flex-shrink-0" />
                 <span>{item}</span>
               </motion.div>
             ))}
@@ -219,16 +273,16 @@ const CareerSupportSection = () => {
           className="text-center"
         >
           <Button 
-            size="lg"
-            onClick={() => setShowEnquiry(true)}
-            className="bg-gradient-to-r from-neon-purple to-neon-cyan text-white font-bold rounded-full px-8 shadow-neon hover:shadow-neon-lg transition-all relative overflow-hidden group"
-          >
-            {/* Amber shine effect */}
-            <div className="absolute inset-0 bg-[#ffc107] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-            <Rocket className="w-5 h-5 mr-2 text-[#ffc107]" />
-            Start Your Career Journey
-            <ArrowRight className="w-5 h-5 ml-2 text-[#ffc107] group-hover:translate-x-1 transition-all" />
-          </Button>
+  size="default"
+  onClick={() => setShowEnquiry(true)}
+  className="bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] text-black font-semibold rounded-full px-4 py-2 text-sm shadow-md hover:shadow-[0_0_20px_rgba(255,193,7,0.4)] transition-all relative overflow-hidden group"
+>
+  {/* Gold shine effect */}
+  <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
+  <Rocket className="w-3 h-3 mr-1 text-black" />
+  Launch Your Creative Journey
+  <ArrowRight className="w-3 h-3 ml-1 text-black group-hover:translate-x-1 transition-all" />
+</Button>
         </motion.div>
       </div>
 

@@ -1,345 +1,507 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { MapPin, Phone, Mail, Send, User, BookOpen, MessageSquare, CheckCircle, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Phone, Mail, Send, CheckCircle, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-
-const campuses = [
-  //{ id: "varanasi", name: "Varanasi (Bhelupur)", address: "123 Creative Hub, Bhelupur, Varanasi 221001" },
-  { id: "gurugram", name: "Gurugram", address: " K-2/5, near Mehrauli-Gurgaon Road, DLF Phase 2, Sector 25, Gurugram, Sarhol, Haryana 122002" },
-];
+import { supabase } from "@/lib/supabase";
+import { CENTER_OPTIONS } from "@/data/centers";
 
 const courses = [
-  "Generative AI for Designers",
-  "VFX & Cinematic Animation",
-  "UI/UX & Product Design",
-  "Motion Graphics & Video",
   "Animation",
-  "Graphic Design",
   "Game Design",
+  "Generative AI",
+  "Graphic Design",
+  "Motion Graphics",
+  "UI/UX Design",
+  "VFX",
   "Video Editing",
 ];
 
 const ContactSection = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    campus: "",
+    pincode: "",
+    url: "",
+    center: "",
     course: "",
-    message: "",
   });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFormData((prev) => ({ ...prev, url: window.location.href }));
+    }
+  }, []);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formFocused, setFormFocused] = useState(false);
 
+  useEffect(() => {
+    if (formFocused) {
+      window.history.pushState(null, "", "#enquiry-form");
+    }
+  }, [formFocused]);
+
+  // ✅ Enhanced phone validation - rejects patterns like 9999999999
+  const validatePhoneNumber = (phone: string): boolean => {
+    const cleanPhone = phone.replace(/\D/g, "");
+    
+    // Check if it's exactly 10 digits
+    if (cleanPhone.length !== 10) return false;
+    
+    // Check if first digit is between 6-9 (Indian mobile numbers)
+    const firstDigit = cleanPhone[0];
+    if (!['6', '7', '8', '9'].includes(firstDigit)) return false;
+    
+    // Check if all digits are the same (9999999999, 8888888888, etc.)
+    const allSameDigit = cleanPhone.split('').every(digit => digit === cleanPhone[0]);
+    if (allSameDigit) return false;
+    
+    // Check for sequential patterns (1234567890, 9876543210)
+    const isSequential = (num: string): boolean => {
+      // Check ascending
+      let ascending = true;
+      for (let i = 0; i < num.length - 1; i++) {
+        if (parseInt(num[i+1]) !== parseInt(num[i]) + 1) {
+          ascending = false;
+          break;
+        }
+      }
+      
+      // Check descending
+      let descending = true;
+      for (let i = 0; i < num.length - 1; i++) {
+        if (parseInt(num[i+1]) !== parseInt(num[i]) - 1) {
+          descending = false;
+          break;
+        }
+      }
+      
+      return ascending || descending;
+    };
+    
+    if (isSequential(cleanPhone)) return false;
+    
+    // Check for repeated patterns like 1212121212, 1231231231
+    const hasRepeatedPattern = (num: string): boolean => {
+      for (let patternLen = 2; patternLen <= 5; patternLen++) {
+        if (num.length % patternLen === 0) {
+          const pattern = num.substring(0, patternLen);
+          let matches = true;
+          for (let i = 0; i < num.length; i += patternLen) {
+            if (num.substring(i, i + patternLen) !== pattern) {
+              matches = false;
+              break;
+            }
+          }
+          if (matches && patternLen < num.length) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    
+    if (hasRepeatedPattern(cleanPhone)) return false;
+    
+    return true;
+  };
+
+  // ✅ Enhanced validation function
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) {
-      newErrors.name = "Yo, we need your name! 👋";
+      newErrors.name = "Enter your name";
     } else if (formData.name.trim().length > 100) {
-      newErrors.name = "That's a pretty long name! Keep it under 100 chars";
+      newErrors.name = "Name is too long";
     }
     
+    // ✅ Enhanced phone validation
     if (!formData.phone.trim()) {
-      newErrors.phone = "Drop your digits! 📱";
-    } else if (!/^[6-9]\d{9}$/.test(formData.phone.replace(/\s/g, ""))) {
-      newErrors.phone = "That doesn't look like a valid Indian number";
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = "We need your email to slide into your inbox! 📧";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "That email looks sus... double check it?";
+      newErrors.phone = "Enter phone number";
+    } else {
+      const cleanPhone = formData.phone.replace(/\D/g, "");
+      if (cleanPhone.length !== 10) {
+        newErrors.phone = "Phone number must be exactly 10 digits";
+      } else if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+        newErrors.phone = "Enter a valid Indian mobile number (starts with 6,7,8,9)";
+      } else {
+        // Check for invalid patterns
+        const allSameDigit = cleanPhone.split('').every(digit => digit === cleanPhone[0]);
+        if (allSameDigit) {
+          newErrors.phone = "Enter a valid mobile number";
+        } else {
+          // Check sequential
+          let isSequential = false;
+          // Check ascending
+          let ascending = true;
+          for (let i = 0; i < cleanPhone.length - 1; i++) {
+            if (parseInt(cleanPhone[i+1]) !== parseInt(cleanPhone[i]) + 1) {
+              ascending = false;
+              break;
+            }
+          }
+          // Check descending
+          let descending = true;
+          for (let i = 0; i < cleanPhone.length - 1; i++) {
+            if (parseInt(cleanPhone[i+1]) !== parseInt(cleanPhone[i]) - 1) {
+              descending = false;
+              break;
+            }
+          }
+          if (ascending || descending) {
+            newErrors.phone = "Enter a valid mobile number";
+          } else {
+            // Check repeated patterns
+            let hasPattern = false;
+            for (let patternLen = 2; patternLen <= 5; patternLen++) {
+              if (cleanPhone.length % patternLen === 0) {
+                const pattern = cleanPhone.substring(0, patternLen);
+                let matches = true;
+                for (let i = 0; i < cleanPhone.length; i += patternLen) {
+                  if (cleanPhone.substring(i, i + patternLen) !== pattern) {
+                    matches = false;
+                    break;
+                  }
+                }
+                if (matches && patternLen < cleanPhone.length) {
+                  hasPattern = true;
+                  break;
+                }
+              }
+            }
+            if (hasPattern) {
+              newErrors.phone = "Enter a valid mobile number";
+            }
+          }
+        }
+      }
     }
     
     if (!formData.course) {
-      newErrors.course = "Pick a vibe! 🎯";
+      newErrors.course = "Select a course";
     }
 
-    if (formData.message.length > 500) {
-      newErrors.message = "Keep it short and sweet - under 500 chars!";
-    }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // ✅ Phone input handler with strict validation
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
     
-    if (!validateForm()) return;
+    // Remove any non-digit characters
+    let digits = value.replace(/\D/g, "");
     
-    setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Limit to exactly 10 digits
+    if (digits.length > 10) {
+      digits = digits.slice(0, 10);
+    }
     
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    toast.success("We got your message! Our team will hit you up soon 🚀");
+    // Update form data with the cleaned digits
+    setFormData({ ...formData, phone: digits });
     
-    setTimeout(() => {
-      setIsSuccess(false);
-      setFormData({ name: "", email: "", phone: "", campus: "", course: "", message: "" });
-    }, 2000);
+    // Clear phone error when user starts typing again
+    if (errors.phone) {
+      setErrors(prev => ({ ...prev, phone: "" }));
+    }
   };
 
-  return (
-    <section id="contact" className="section-padding relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 mesh-gradient opacity-30" />
-      <div className="absolute inset-0 cyber-grid opacity-5" />
-      
-      <div className="container relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16">
-          {/* Left - Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <motion.span
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6"
-            >
-              <MapPin className="w-4 h-4 text-[#ffc107]" />
-              <span className="text-neon-cyan font-medium">📍 Get in Touch</span>
-            </motion.span>
-            <h2 className="display-medium mb-6 text-foreground">
-              Start your <span className="gradient-text">creative journey</span>
-            </h2>
-            <p className="text-xl text-foreground/80 mb-10 leading-relaxed">
-              Ready to transform your career? Connect with our counselors for 
-              personalized guidance and course recommendations.
-            </p>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-            {/* Campus Cards */}
-            <div className="space-y-4 mb-8">
-              {campuses.map((campus, index) => (
-                <motion.div
-                  key={campus.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="glass-card p-5 group hover:border-[#ffc107]/20 transition-all duration-300"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-neon-purple/20 to-neon-cyan/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform border border-neon-purple/30">
-                      <MapPin className="w-5 h-5 text-neon-cyan group-hover:text-[#ffc107] transition-colors duration-300" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1 text-foreground">{campus.name}</h3>
-                      <p className="text-sm text-foreground/70">{campus.address}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+    setIsSubmitting(true);
+
+    try {
+      const currentUrl = typeof window !== "undefined" ? window.location.href : formData.url;
+      
+      // ✅ Clean phone number before sending to backend
+      const cleanPhone = formData.phone.replace(/\D/g, "");
+      
+      const { error } = await supabase.from("enquiries").insert([
+        {
+          name: formData.name,
+          phone: cleanPhone, // Send cleaned 10-digit number
+          email: formData.email || null,
+          pincode: formData.pincode || null,
+          full_url: currentUrl || null,
+          course: formData.course,
+          center: formData.center,
+          status: "new",
+        },
+      ]);
+
+      if (error) throw error;
+
+      setIsSuccess(true);
+      setIsSubmitting(false);
+      toast.success("Enquiry submitted 🚀");
+
+      setTimeout(() => {
+        setIsSuccess(false);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          pincode: "",
+          url: window.location.href,
+          center: "",
+          course: "",
+        });
+        navigate("/thank-you");
+      }, 2000);
+    } catch {
+      toast.error("Something went wrong");
+      setIsSubmitting(false);
+    }
+  };
+
+  // Google Maps Embed URL
+  const googleMapsEmbedUrl = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d876.4158433530464!2d77.20075!3d28.519774!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x21fa7e64a8ce1bcf%3A0xf6deed6dd80ea7!2sDesign%20Engine%20%E2%80%93%20Saket!5e0!3m2!1sen!2sin!4v1779282104351!5m2!1sen!2sin";
+
+  // Performance helpers: disable animations on reduced-motion or small screens
+  const [disableAnimations, setDisableAnimations] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const smallScreen = window.innerWidth && window.innerWidth < 768;
+    setDisableAnimations(!!(prefersReduced || smallScreen));
+  }, []);
+
+  // Lazy load map iframe only after user interaction to reduce LCP impact
+  const [mapLoaded, setMapLoaded] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // Auto-load map on larger screens for better UX; keep deferred on small devices to save LCP
+    if (window.innerWidth >= 768) {
+      setMapLoaded(true);
+    }
+  }, []);
+
+  return (
+    <section id="contact" className="relative py-16 bg-[#030306] overflow-hidden">
+      <div className="absolute top-0 left-0 w-96 h-96 bg-[#ffc107]/10 blur-xl rounded-full" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#ffc107]/5 blur-xl rounded-full" />
+
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14">
+          
+          {/* LEFT COLUMN */}
+          <motion.div
+            initial={disableAnimations ? undefined : { opacity: 0, y: 30 }}
+            whileInView={disableAnimations ? undefined : { opacity: 1, y: 0 }}
+            transition={disableAnimations ? undefined : { duration: 0.5 }}
+            viewport={disableAnimations ? undefined : { once: true }}
+            className="space-y-6"
+          >
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "Syne, sans-serif" }}>
+                Start your{" "}
+                <span className="bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] bg-clip-text text-transparent">
+                  creative journey
+                </span>
+              </h2>
+              <p className="text-white/60 text-base mt-3">
+                Ready to transform your career? Connect with our counselors and visit our state-of-the-art campus.
+              </p>
             </div>
 
-            {/* Quick Contact */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a 
-                href="tel:+919910792123"
-                className="flex items-center gap-3 px-5 py-4 rounded-2xl glass-card hover:border-[#ffc107]/30 transition-all duration-300 group"
-              >
-                <Phone className="w-5 h-5 text-neon-cyan group-hover:text-[#ffc107] transition-colors duration-300" />
-                <span className="font-medium text-foreground">+91 99107 92123</span>
-              </a>
-              <a 
-                href="mailto:hello@creativeinstitute.com"
-                className="flex items-center gap-3 px-5 py-4 rounded-2xl glass-card hover:border-[#ffc107]/30 transition-all duration-300 group"
-              >
-                <Mail className="w-5 h-5 text-neon-cyan group-hover:text-[#ffc107] transition-colors duration-300" />
-                <span className="font-medium text-foreground">namaste@design-engine.io</span>
-              </a>
+            {/* Contact Details */}
+            <div className="bg-white/5 backdrop-blur-xl border border-[#ffc107]/10 rounded-2xl p-5">
+              <h3 className="text-white font-semibold text-base mb-3">Contact Details</h3>
+              <div className="space-y-2">
+                <a href="tel:+918796151653" className="flex items-center gap-3 text-white/70 hover:text-[#ffc107] transition-colors">
+                  <Phone className="w-4 h-4 text-[#fcc007]" />
+                  <span className="text-sm">+91 87961 51653</span>
+                </a>
+                <a href="mailto:designengine.saket@gmail.com" className="flex items-center gap-3 text-white/70 hover:text-[#ffc107] transition-colors">
+                  <Mail className="w-4 h-4 text-[#fcc007]" />
+                  <span className="text-sm">designengine.saket@gmail.com</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Our Location with Map */}
+            <div className="bg-white/5 backdrop-blur-xl border border-[#ffc107]/10 rounded-2xl p-5">
+              <h3 className="text-white font-semibold text-base mb-3">Our Location</h3>
+              
+              <div className="flex gap-3 mb-4">
+                <MapPin className="w-4 h-4 text-[#fcc007] flex-shrink-0 mt-0.5" />
+                <p className="text-white/70 text-sm leading-relaxed">
+                  JP House, Plot 172, Westend Marg, Saidulajab,<br />
+                  Saiyad Ul Ajaib Village, Sainik Farm,<br />
+                  New Delhi, Delhi 110030
+                </p>
+              </div>
+
+              <div className="rounded-xl overflow-hidden border border-[#ffc107]/20">
+                {mapLoaded ? (
+                  <iframe
+                    title="Design Engine Saket, Delhi Campus Location"
+                    src={googleMapsEmbedUrl}
+                    width="100%"
+                    height="250"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="w-full"
+                  />
+                ) : (
+                  <div className="w-full h-[250px] flex flex-col items-center justify-center bg-[#000000]/10 text-white/70 p-4">
+                    <p className="text-sm text-center mb-3">Map is deferred to improve page load. Click to load the interactive map.</p>
+                    <div className="flex gap-2">
+                      <Button onClick={() => setMapLoaded(true)} className="bg-[#ffc107] text-black">Load Map</Button>
+                      <a href="https://www.google.com/maps/search/?api=1&query=Design+Engine+Saket" target="_blank" rel="noreferrer" className="text-[#ffc107] hover:underline self-center">Open in Maps</a>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
 
-          {/* Right - Contact Form (Matching Hero Form Style) */}
+          {/* RIGHT COLUMN - Form */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
+            initial={disableAnimations ? undefined : { opacity: 0, y: 30 }}
+            whileInView={disableAnimations ? undefined : { opacity: 1, y: 0 }}
+            transition={disableAnimations ? undefined : { duration: 0.5, delay: 0.1 }}
+            viewport={disableAnimations ? undefined : { once: true }}
           >
-            <div className="glass-card p-8 hover:border-[#ffc107]/10 transition-all duration-300">
-              {/* VHS Effect */}
-              <div className="absolute inset-0 vhs-lines opacity-5 pointer-events-none rounded-3xl" />
-              
-              <h3 className="text-2xl font-bold mb-2 font-display">
-                Let's Get You <span className="gradient-text">Started</span> 🚀
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Drop your deets and our team will hit you up real quick!
-              </p>
+            <div className="bg-white/5 backdrop-blur-xl border border-[#ffc107]/20 rounded-2xl p-6 md:p-8">
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  Let's Get You Started 🚀
+                </h3>
+                <p className="text-white/40 text-sm">
+                  Fill in your details and our counselor will reach out within 24 hours
+                </p>
+              </div>
 
               {isSuccess ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center justify-center py-20"
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col items-center py-12"
                 >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", delay: 0.2 }}
-                    className="w-24 h-24 rounded-full bg-neon-green/20 flex items-center justify-center mb-6"
-                  >
+                  <div className="w-24 h-24 rounded-full bg-[#ffc107]/20 flex items-center justify-center mb-6">
                     <CheckCircle className="w-12 h-12 text-[#ffc107]" />
-                  </motion.div>
-                  <h3 className="text-2xl font-bold mb-2">You're All Set! 🎉</h3>
-                  <p className="text-muted-foreground text-center">
-                    Our team will slide into your inbox shortly
+                  </div>
+                  <h3 className="text-2xl text-white font-bold mb-2">You're All Set!</h3>
+                  <p className="text-white/60 text-center max-w-xs">
+                    Thank you for reaching out. Our counselor will contact you soon.
                   </p>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Name */}
+                <form onSubmit={handleSubmit} className="space-y-4" onFocus={() => setFormFocused(true)}>
+                  {/* Name Field */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      <User className="w-4 h-4 inline mr-2 text-[#ffc107]" />
-                      Your Name *
-                    </label>
                     <Input
-                      placeholder="What should we call you?"
+                      placeholder="Your Full Name *"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className={`rainbow-border bg-secondary/50 h-12 ${errors.name ? "border-destructive" : "focus:border-[#ffc107]/50"}`}
+                      className={`bg-white/5 border-[#ffc107]/20 text-white h-12 ${errors.name ? 'border-red-500' : 'focus:border-[#ffc107]'}`}
                       maxLength={100}
                     />
-                    {errors.name && (
-                      <p className="text-destructive text-sm mt-1">{errors.name}</p>
-                    )}
+                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                   </div>
 
-                  {/* Phone & Email */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <Phone className="w-4 h-4 inline mr-2 text-[#ffc107]" />
-                        Phone Number *
-                      </label>
-                      <Input
-                        placeholder="10-digit mobile"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}
-                        className={`rainbow-border bg-secondary/50 h-12 ${errors.phone ? "border-destructive" : "focus:border-[#ffc107]/50"}`}
-                        type="tel"
-                      />
-                      {errors.phone && (
-                        <p className="text-destructive text-sm mt-1">{errors.phone}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <Mail className="w-4 h-4 inline mr-2 text-[#ffc107]" />
-                        Email *
-                      </label>
-                      <Input
-                        placeholder="your.email@example.com"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className={`rainbow-border bg-secondary/50 h-12 ${errors.email ? "border-destructive" : "focus:border-[#ffc107]/50"}`}
-                        type="email"
-                        maxLength={255}
-                      />
-                      {errors.email && (
-                        <p className="text-destructive text-sm mt-1">{errors.email}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Campus & Course */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <MapPin className="w-4 h-4 inline mr-2 text-[#ffc107]" />
-                        Preferred Campus
-                      </label>
-                      <Select
-                        value={formData.campus}
-                        onValueChange={(value) => setFormData({ ...formData, campus: value })}
-                      >
-                        <SelectTrigger className="h-12 bg-secondary/50 focus:border-[#ffc107]/50">
-                          <SelectValue placeholder="Select Campus" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card border-border">
-                          {/*<SelectItem value="varanasi">Varanasi (Bhelupur)</SelectItem>*/}
-                          <SelectItem value="gurugram">Gurugram</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <BookOpen className="w-4 h-4 inline mr-2 text-[#ffc107]" />
-                        Course Interest *
-                      </label>
-                      <Select
-                        value={formData.course}
-                        onValueChange={(value) => setFormData({ ...formData, course: value })}
-                      >
-                        <SelectTrigger className={`h-12 bg-secondary/50 ${errors.course ? "border-destructive" : "focus:border-[#ffc107]/50"}`}>
-                          <SelectValue placeholder="Pick your path" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card border-border">
-                          {courses.map((course) => (
-                            <SelectItem key={course} value={course}>
-                              {course}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.course && (
-                        <p className="text-destructive text-sm mt-1">{errors.course}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Message */}
+                  {/* Phone Field */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      <MessageSquare className="w-4 h-4 inline mr-2 text-[#ffc107]" />
-                      Anything else? (Optional)
-                    </label>
-                    <Textarea
-                      placeholder="Got questions? Spill the tea..."
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="rainbow-border bg-secondary/50 min-h-[100px] focus:border-[#ffc107]/50"
-                      maxLength={500}
+                    <Input
+                      placeholder="10-digit Mobile Number *"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      className={`bg-white/5 border-[#ffc107]/20 text-white h-12 ${errors.phone ? 'border-red-500' : 'focus:border-[#ffc107]'}`}
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]{10}"
+                      maxLength={10}
                     />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {formData.message.length}/500 characters
-                    </p>
+                    {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                   </div>
+
+                  {/* Course Selection */}
+                  <div>
+                    <Select
+                      value={formData.course}
+                      onValueChange={(value) => setFormData({ ...formData, course: value })}
+                    >
+                      <SelectTrigger className={`h-12 bg-white/5 border-[#ffc107]/20 text-white ${errors.course ? 'border-red-500' : ''}`}>
+                        <SelectValue placeholder="Select Course *" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#030306] border-[#ffc107]/20 text-white">
+                        {courses.map((course) => (
+                          <SelectItem 
+                            key={course} 
+                            value={course}
+                            className="hover:bg-[#ffc107] hover:text-black"
+                          >
+                            {course}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.course && <p className="text-red-500 text-xs mt-1">{errors.course}</p>}
+                  </div>
+
+                  {/* Center Field - AT THE END (before submit button) */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-white/80">
+                      <MapPin className="w-4 h-4 inline mr-2 text-[#ffc107]" />
+                      Select Center *
+                    </label>
+                    <Select
+                      value={formData.center}
+                      onValueChange={(value) => setFormData({ ...formData, center: value })}
+                    >
+                      <SelectTrigger className="h-12 bg-white/5 border-[#ffc107]/20 text-white"> 
+                        <SelectValue placeholder="Select Center" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#030306] border-[#ffc107]/20 text-white">
+                        {CENTER_OPTIONS.map(opt => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <input type="hidden" name="url" value={formData.url} />
 
                   {/* Submit Button */}
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full neon-button float-hover text-white font-bold rounded-full h-14 text-lg hover:border-[#ffc107]/30 transition-all duration-300"
+                    className="w-full bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] text-black font-bold rounded-full h-12 text-base shadow-lg hover:shadow-[0_0_30px_rgba(255,193,7,0.5)] transition-all disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         Sending...
                       </>
                     ) : (
                       <>
-                        <Send className="w-5 h-5 mr-2 text-[#ffc107]" />
-                        Submit Enquiry 🚀
+                        <Send className="w-4 h-4 mr-2" />
+                        Submit Enquiry
                       </>
                     )}
                   </Button>
 
-                  <p className="text-xs text-muted-foreground text-center">
-                    <span className="text-[#ffc107]">✨</span> We respect your privacy. No spam, we promise! 🤝
+                  {/* Privacy Notice */}
+                  <p className="text-xs text-white/30 text-center mt-4">
+                    By submitting this form, you agree to our{' '}
+                    <Link to="/privacy-policy" target="_blank" className="text-[#ffc107] hover:underline">
+                      Privacy Policy
+                    </Link>{' '}
+                    and consent to being contacted.
                   </p>
                 </form>
               )}
@@ -347,6 +509,7 @@ const ContactSection = () => {
           </motion.div>
         </div>
       </div>
+      
     </section>
   );
 };

@@ -1,80 +1,76 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef } from "react";
-import { Play, Pause, Star, Quote, ChevronLeft, ChevronRight, Film, Clapperboard, Volume2, VolumeX } from "lucide-react";
+import { useState } from "react";
+import { Star, Quote, ChevronLeft, ChevronRight, Film, Clapperboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ResponsiveImage from "./ResponsiveImage";
+import alkaImg from "@/assets/testimonials/alka.webp";
+import komalImg from "@/assets/testimonials/komal.webp";
+import nikitaImg from "@/assets/testimonials/nikita.webp";
+import vartulImg from "@/assets/testimonials/vartul.webp";
 
 const testimonials = [
   {
     id: 1,
-    name: "Arjun Mehta",
-    role: "3D Artist at Framestore",
-    company: "Framestore",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    name: "Alka",
+    role: "VFX Artist",
+    image: alkaImg,
     rating: 5,
-    quote: "The AI curriculum completely transformed my workflow. I went from a junior designer to landing a role at one of the world's top VFX studios in just 8 months.",
-    salary: "₹18 LPA",
+    quote: "Design Engine's Delhi VFX course was a complete game-changer. The blend of production studio pipelines and Gen-AI tools gave me a unique edge. The NCR placement cell was top-notch, leading to my role at Charuvi Design Labs.",
     course: "VFX & Animation",
   },
   {
     id: 2,
-    name: "Priya Singh",
-    role: "Senior UI/UX Designer at Google",
-    company: "Google",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    name: "Komal",
+    role: "UI/UX Designer",
+    company: "Future Design",
+    image: komalImg,
     rating: 5,
-    quote: "CreativeTech's hands-on approach to teaching Figma and AI tools gave me an edge that no other institute could. The placement support was exceptional.",
+    quote: "The South Delhi campus hands-on approach to advanced Figma systems and AI workflows gave me an edge no other academy could. The local placement support was exceptional.",
     salary: "₹24 LPA",
     course: "UI/UX Design",
   },
   {
     id: 3,
-    name: "Rahul Kumar",
-    role: "Motion Designer at Netflix",
-    company: "Netflix",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    name: "Nikita",
+    role: "Motion Designer",
+    company: "Schmooze Media",
+    image: nikitaImg,
     rating: 5,
-    quote: "Learning motion graphics with AI integration opened doors I never knew existed. The instructors are industry veterans who truly care about your success.",
+    quote: "Learning elite motion graphics with Gen-AI tools opened incredible global career doors. The Delhi mentors are production house veterans who genuinely guide your growth.",
     salary: "₹16 LPA",
     course: "Motion Graphics",
   },
   {
     id: 4,
-    name: "Sneha Patel",
-    role: "AI Art Director at Adobe",
-    company: "Adobe",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+    name: "Vartul",
+    role: "3D Artist",
+    company: "Immersive Art Studio",
+    image: vartulImg,
     rating: 5,
-    quote: "The generative AI course was ahead of its time. I was creating with Midjourney and Stable Diffusion before most designers even heard of them.",
+    quote: "Design Engine Delhi was teaching 3D asset pipelines way before the market caught up—I was already rendering live projects while other batches were just starting out.",
     salary: "₹22 LPA",
-    course: "Generative AI",
+    course: "3D Modeling & Animation",
   },
 ];
 
-// Video Testimonial Card with playable video
-const VideoTestimonialCard = ({ 
-  testimonial, 
-  onPlayVideo 
+// Testimonial Card - Image only (no video)
+const TestimonialCard = ({ 
+  testimonial 
 }: { 
   testimonial: typeof testimonials[0];
-  onPlayVideo: (url: string, name: string) => void;
 }) => {
   return (
     <motion.div
-      className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[3/4]"
+      className="relative group overflow-hidden rounded-2xl aspect-[3/4]"
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      onClick={() => onPlayVideo(testimonial.videoUrl, testimonial.name)}
     >
-      {/* Thumbnail */}
-      <img
+      {/* Image */}
+      <ResponsiveImage
         src={testimonial.image}
         alt={testimonial.name}
         className="w-full h-full object-cover"
+        sizes="(max-width: 640px) 100vw, 33vw"
       />
       
       {/* Film strip overlay - Animation Institute feel */}
@@ -84,20 +80,6 @@ const VideoTestimonialCard = ({
       <div className="absolute top-4 left-4 flex items-center gap-2 text-white/60">
         <Film className="w-4 h-4" />
         <span className="text-xs font-medium tracking-wider">STUDENT REEL</span>
-      </div>
-      
-      {/* Play Button with film reel animation */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div 
-          className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 transition-colors border border-white/30"
-          whileHover={{ scale: 1.1 }}
-          animate={{ 
-            boxShadow: ["0 0 0 0 rgba(255,255,255,0.4)", "0 0 0 20px rgba(255,255,255,0)", "0 0 0 0 rgba(255,255,255,0.4)"]
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <Play className="w-6 h-6 text-white ml-1" fill="white" />
-        </motion.div>
       </div>
       
       {/* Content */}
@@ -135,9 +117,6 @@ const VideoTestimonialCard = ({
 
 const TestimonialsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [videoModal, setVideoModal] = useState<{ url: string; name: string } | null>(null);
-  const [isMuted, setIsMuted] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const nextTestimonial = () => {
     setActiveIndex((prev) => (prev + 1) % testimonials.length);
@@ -145,17 +124,6 @@ const TestimonialsSection = () => {
 
   const prevTestimonial = () => {
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const openVideoModal = (url: string, name: string) => {
-    setVideoModal({ url, name });
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
   };
 
   return (
@@ -184,22 +152,20 @@ const TestimonialsSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Clapperboard className="w-5 h-5 text-[#ffc107]" />
-            <p className="text-[#ffc107] font-medium tracking-wider uppercase">Student Reels</p>
-            <Clapperboard className="w-5 h-5 text-[#ffc107]" />
-          </div>
-          <h2 className="display-medium mb-6">
-            Watch their <span className="text-gradient">success stories</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white" style={{ fontFamily: 'Syne, sans-serif' }}>
+            <span className="bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] bg-clip-text text-transparent">Launch Your Creative Journey</span>
           </h2>
-          <p className="text-xl text-muted-foreground">
-            Real video testimonials from alumni who transformed their creative careers 
-            with our industry-focused programs.
+          
+          {/* Enhanced alumni testimonials text */}
+          <p className="text-lg md:text-lg font-light leading-relaxed text-foreground/90 max-w-2xl mx-auto">
+            Real reviews from Delhi batch alumni who transformed their creative passions 
+            <span className="block mt-2 text-[#ffc107] font-medium">with our intensive media programs</span>
           </p>
+          <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-[#ffc107] to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {/* Video Testimonials Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {/* Testimonials Grid - Image Only */}
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
@@ -208,13 +174,10 @@ const TestimonialsSection = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <VideoTestimonialCard 
-                testimonial={testimonial} 
-                onPlayVideo={openVideoModal}
-              />
+              <TestimonialCard testimonial={testimonial} />
             </motion.div>
           ))}
-        </div>
+        </div> */}
 
         {/* Featured Quote Carousel */}
         <motion.div
@@ -241,10 +204,11 @@ const TestimonialsSection = () => {
                   "{testimonials[activeIndex].quote}"
                 </p>
                 <div className="flex items-center justify-center gap-4">
-                  <img 
-                    src={testimonials[activeIndex].image} 
+                  <ResponsiveImage
+                    src={testimonials[activeIndex].image}
                     alt={testimonials[activeIndex].name}
                     className="w-12 h-12 rounded-full object-cover ring-2 ring-[#ffc107]/30"
+                    sizes="48px"
                   />
                   <div className="text-left">
                     <h4 className="font-semibold">{testimonials[activeIndex].name}</h4>
@@ -291,42 +255,6 @@ const TestimonialsSection = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Video Modal */}
-      <Dialog open={!!videoModal} onOpenChange={() => setVideoModal(null)}>
-        <DialogContent className="max-w-4xl p-0 bg-black border-0 overflow-hidden">
-          <div className="relative aspect-video">
-            {videoModal && (
-              <video
-                ref={videoRef}
-                src={videoModal.url}
-                autoPlay
-                loop
-                muted={isMuted}
-                className="w-full h-full object-cover"
-              />
-            )}
-            
-            {/* Video Controls */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white font-semibold">{videoModal?.name}'s Story</p>
-                  <p className="text-white/60 text-sm">Student Testimonial</p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleMute}
-                  className="text-white hover:bg-white/20 border border-transparent hover:border-[#ffc107]/50"
-                >
-                  {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 };

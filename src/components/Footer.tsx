@@ -1,96 +1,122 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  Instagram, 
-  Youtube, 
-  Linkedin, 
-  Twitter, 
-  Phone, 
+import logo from "@/assets/logo.webp";
+import ResponsiveImage from "./ResponsiveImage";
+import {
+  Instagram,
+  Youtube,
+  Linkedin,
+  Twitter,
+  Phone,
   Mail,
   ArrowUpRight,
-  Zap,
   Facebook
 } from "lucide-react";
+import { FaPinterest } from "react-icons/fa";
+
+const footerCourseLinks = [
+  { title: "B.Sc in Vocational Multimedia & Animation", slug: "B.sc-digital-media-ai-filmmaking" },
+  { title: "Digital Graphic Design Essentials", slug: "digital-graphic-design-essentials" },
+  { title: "Digital Content & Motion Design", slug: "digital-content-motion-design" },
+  { title: "Expert Program in Digital Content & Animation", slug: "expert-program-digital-content-animation" },
+  { title: "Master in AVG", slug: "master-in-avg" },
+  { title: "RenderCraft: 3D Animation & VFX", slug: "rendercraft-3d-animation-vfx" },
+  { title: "DreamEngine: Animation with Unreal", slug: "dreamengine-animation-unreal" },
+  { title: "Advanced UI Design Skills", slug: "ui-ux-product-design" },
+  { title: "Video Editing", slug: "video-editing" },
+];
 
 const footerLinks = {
-  courses: [
-    { label: "Generative AI", href: "/course/generative-ai-for-designers" },
-    { label: "VFX & Animation", href: "/course/vfx-cinematic-animation" },
-    { label: "UI/UX Design", href: "/course/ui-ux-product-design" },
-    { label: "Motion Graphics", href: "/course/motion-graphics-video" },
-    { label: "Video Editing", href: "/course/video-editing" },
-  ],
+  courses: footerCourseLinks,
   company: [
-    { label: "About Us", href: "/#about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Events", href: "/events" },
-    { label: "Partners", href: "/#partners" },
-    { label: "Contact", href: "/#contact" },
+    { label: "About Us", href: "/about", isHash: false },
+    { label: "Blog", href: "/blog", isHash: false },
+    { label: "Partners", href: "#partners", isHash: true },
+    { label: "Student Work", href: "/student-work", isHash: false },
   ],
   resources: [
-    { label: "All Courses", href: "/courses" },
-    { label: "Creative Path Quiz", href: "/quiz" },
-    { label: "Student Portfolio", href: "/portfolio" },
-    { label: "FAQ", href: "/#faq" },
-    { label: "Placements", href: "/#partners" },
+    { label: "All Courses", href: "/courses", isHash: false },
+    { label: "Creative Path Quiz", href: "/quiz", isHash: false },
+    { label: "FAQ", href: "/faq", isHash: false },
   ],
 };
 
+// Social links with YouTube and LinkedIn uncommented
 const socialLinks = [
-  { icon: Instagram, href: "https://www.instagram.com/design_engine_india/", label: "Instagram" },
-  { icon: Youtube, href: "https://youtube.com/@designengineindia?si=-GtE0qL8sJaVh3TU", label: "Youtube" },
-  { icon: Linkedin, href: "https://www.linkedin.com/company/design-engine-india/about/?viewAsMember=true", label: "LinkedIn" },
-  { icon: Twitter, href: "https://x.com/designengine_", label: "Twitter" },
-  { icon: Facebook, href: "https://www.facebook.com/people/Design-Engine-India/61584258057605", label: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/designengine_saket", label: "Instagram", isLucide: true },
+  { icon: Youtube, href: "https://www.youtube.com/@DesignEngine_Official", label: "Youtube", isLucide: true },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/design-engine-saket", label: "LinkedIn", isLucide: true },
+  { icon: Twitter, href: "https://x.com/de_saket", label: "Twitter", isLucide: true },
+  { icon: Facebook, href: "https://www.facebook.com/designengine.saket", label: "Facebook", isLucide: true },
+  { icon: FaPinterest, href: "https://in.pinterest.com/designengine_saket", label: "Pinterest", isLucide: false },
+];
+
+// Center details (without location/address)
+const centers = [
+  {
+    name: "",
+    phone: "+91 87961 51653",
+    email: "designengine.saket@gmail.com"
+  }
 ];
 
 const Footer = () => {
   return (
-    <footer className="relative pt-20 pb-8 border-t border-[#ffc107]/10">
-      {/* Background */}
-      <div className="absolute inset-0 cyber-grid opacity-5" />
-      <div className="absolute inset-0 mesh-gradient opacity-20" />
+    <footer className="relative pt-20 pb-2 border-t border-[#ffc107]/10">
+      <div className="absolute inset-0 bg-[#030306]" />
 
       <div className="container relative z-10 px-4 md:px-6">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16">
-          {/* Brand Column */}
-          <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 group">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-neon-purple to-neon-cyan flex items-center justify-center shadow-neon group-hover:scale-110 transition-transform">
-                <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-[#ffc107] transition-colors duration-300" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-bold">
-                  Design<span className="gradient-text">Engine</span>
-                </span>
-                <span className="text-[10px] sm:text-xs text-muted-foreground">Creative-Tech Institute</span>
-              </div>
+        {/* MAIN FOOTER */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-4">
+          {/* BRAND */}
+          <div className="lg:col-span-4">
+            <Link to="/" className="inline-block mb-4">
+              <ResponsiveImage
+                src={logo}
+                alt="Design Engine logo"
+                className="w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] object-contain"
+                sizes="(max-width: 768px) 100vw, 220px"
+              />
             </Link>
-            <p className="text-muted-foreground mb-4 sm:mb-6 max-w-sm leading-relaxed text-sm sm:text-base">
-              India's leading Multimedia and Generative AI Institute. 
-              Transforming creative careers with cutting-edge AI tools and 
-              industry-ready skills since 2018.
+
+            <p className="text-white/60 mb-4 max-w-sm leading-relaxed text-xs">
+              India's leading Multimedia and Generative AI Institute.
+              Transforming creative careers with cutting-edge AI tools and
+              industry-ready skills.
             </p>
 
-            {/* Contact Info */}
-            <div className="space-y-2 sm:space-y-3">
-              <a href="tel:+919876543210" className="flex items-center gap-2 sm:gap-3 text-muted-foreground hover:text-foreground transition-colors group text-sm sm:text-base">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-neon-purple/20 flex items-center justify-center group-hover:bg-neon-purple/30 transition-colors border border-transparent group-hover:border-[#ffc107]/20">
-                  <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neon-purple group-hover:text-[#ffc107] transition-colors duration-300" />
+            {/* CENTERS CONTACT */}
+            <div className="grid grid-cols-1 gap-6 mb-4">
+              {centers.map((center, index) => (
+                <div key={center.name || index} className="space-y-2">
+                  
+                  {/* Phone */}
+                  <a
+                    href={`tel:${center.phone.replace(/\s/g, '')}`}
+                    className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-[#ffc107]/10 flex items-center justify-center shrink-0">
+                      <Phone className="w-3 h-3 text-[#ffc107]" />
+                    </div>
+                    <span className="text-[11px] whitespace-nowrap">{center.phone}</span>
+                  </a>
+
+                  {/* Email */}
+                  <a
+                    href={`mailto:${center.email}`}
+                    className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-[#ffc107]/10 flex items-center justify-center shrink-0">
+                      <Mail className="w-3 h-3 text-[#ffc107]" />
+                    </div>
+                    <span className="text-[11px] whitespace-nowrap">{center.email}</span>
+                  </a>
                 </div>
-                <span>+91 9910792123</span>
-              </a>
-              <a href="mailto:hello@design-engine.io" className="flex items-center gap-2 sm:gap-3 text-muted-foreground hover:text-foreground transition-colors group text-sm sm:text-base">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center group-hover:bg-neon-cyan/30 transition-colors border border-transparent group-hover:border-[#ffc107]/20">
-                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neon-cyan group-hover:text-[#ffc107] transition-colors duration-300" />
-                </div>
-                <span>namaste@design-engine.io</span>
-              </a>
+              ))}
             </div>
 
-            {/* Social Links */}
-            <div className="flex items-center gap-2 sm:gap-3 mt-4 sm:mt-6">
+            {/* SOCIAL - All platforms including YouTube and LinkedIn */}
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
@@ -99,80 +125,109 @@ const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={social.label}
-                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-secondary/80 hover:bg-gradient-to-br hover:from-neon-purple hover:to-neon-cyan flex items-center justify-center transition-all duration-300 border border-transparent hover:border-[#ffc107]/30"
+                    className="w-9 h-9 rounded-xl bg-white/5 hover:bg-[#ffc107] flex items-center justify-center transition-colors group"
                   >
-                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 hover:text-[#ffc107] transition-colors duration-300" />
+                    <Icon className="w-4 h-4 text-white/70 group-hover:text-black transition-colors" />
                   </motion.a>
                 );
               })}
             </div>
           </div>
 
-          {/* Links Columns */}
-          <div>
-            <h4 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 gradient-text">Courses</h4>
-            <ul className="space-y-2 sm:space-y-3">
-              {footerLinks.courses.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 group text-xs sm:text-sm"
-                  >
-                    {link.label}
-                    <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all group-hover:text-[#ffc107]" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* LINKS - ALL THREE COLUMNS */}
+          <div className="lg:col-span-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+              {/* COURSES */}
+              <div>
+                <h4 className="font-semibold text-[#ffc107] mb-3 text-xs tracking-wider">
+                  Courses
+                </h4>
+                <ul className="space-y-2">
+                  {footerLinks.courses.map((course) => (
+                    <li key={course.slug}>
+                      <Link
+                        to={`/quiz-course/${course.slug}`}
+                        className="relative block text-xs leading-normal text-white/80 transition-colors hover:text-white"
+                      >
+                        {course.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          <div>
-            <h4 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 gradient-text">Company</h4>
-            <ul className="space-y-2 sm:space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 group text-xs sm:text-sm"
-                  >
-                    {link.label}
-                    <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all group-hover:text-[#ffc107]" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+              {/* COMPANY */}
+              <div>
+                <h4 className="font-semibold text-[#ffc107] mb-3 text-xs tracking-wider">
+                  Company
+                </h4>
+                <ul className="space-y-2">
+                  {footerLinks.company.map((link) => (
+                    <li key={link.label}>
+                      {link.isHash ? (
+                        <a
+                          href={link.href}
+                          className="group relative inline-flex items-center gap-0.5 text-xs text-white/60 transition-colors hover:text-white"
+                        >
+                          <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#ffc107] after:transition-all after:duration-300 group-hover:after:w-full">{link.label}</span>
+                          <ArrowUpRight className="w-3 h-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                        </a>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          className="group relative inline-flex items-center gap-0.5 text-xs text-white/60 transition-colors hover:text-white"
+                        >
+                          <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#ffc107] after:transition-all after:duration-300 group-hover:after:w-full">{link.label}</span>
+                          <ArrowUpRight className="w-3 h-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          <div>
-            <h4 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 gradient-text">Resources</h4>
-            <ul className="space-y-2 sm:space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 group text-xs sm:text-sm"
-                  >
-                    {link.label}
-                    <ArrowUpRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all group-hover:text-[#ffc107]" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+              {/* RESOURCES */}
+              <div>
+                <h4 className="font-semibold text-[#ffc107] mb-3 text-xs tracking-wider">
+                  Resources
+                </h4>
+                <ul className="space-y-2">
+                  {footerLinks.resources.map((link) => (
+                    <li key={link.label}>
+                      {link.isHash ? (
+                        <a
+                          href={link.href}
+                          className="group relative inline-flex items-center gap-0.5 text-xs text-white/60 transition-colors hover:text-white"
+                        >
+                          <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#ffc107] after:transition-all after:duration-300 group-hover:after:w-full">{link.label}</span>
+                          <ArrowUpRight className="w-3 h-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                        </a>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          className="group relative inline-flex items-center gap-0.5 text-xs text-white/60 transition-colors hover:text-white"
+                        >
+                          <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-[1px] after:w-0 after:bg-[#ffc107] after:transition-all after:duration-300 group-hover:after:w-full">{link.label}</span>
+                          <ArrowUpRight className="w-3 h-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-6 sm:pt-8 border-t border-[#ffc107]/10 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
-          <p className="text-xs sm:text-sm text-muted-foreground text-center md:text-left">
-            <span className="text-[#ffc107]">✦</span> © {new Date().getFullYear()} Design Engine. All rights reserved. <span className="text-[#ffc107]">✦</span>
+        {/* BOTTOM BAR */}
+        <div className="pt-4 mb-16 border-t border-[#ffc107]/10 flex flex-col items-center gap-3">
+          <p className="text-[10px] text-white/60 text-center">
+            © {new Date().getFullYear()} Design Engine. All rights reserved.
           </p>
-          <div className="flex items-center gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm text-muted-foreground flex-wrap justify-center">
-            <a href="#" className="hover:text-foreground transition-colors hover:text-[#ffc107]">Privacy Policy</a>
-            <a href="#" className="hover:text-foreground transition-colors hover:text-[#ffc107]">Terms of Service</a>
-            <a href="#" className="hover:text-foreground transition-colors hover:text-[#ffc107]">Cookie Policy</a>
+          <div className="flex items-center gap-4 text-[10px] text-white/60">
+            <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </div>

@@ -1,258 +1,159 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Download, Sparkles, Zap, Rocket, Play, Award, Users, Briefcase } from "lucide-react";
+import { ArrowRight, Zap, Rocket, Award, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
-import BrochureModal from "./BrochureModal";
-import EnquiryModal from "./EnquiryModal";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+const BrochureModal = lazy(() => import("./BrochureModal"));
+const EnquiryModal = lazy(() => import("./EnquiryModal"));
 
 const HeroSection = () => {
   const [showBrochure, setShowBrochure] = useState(false);
   const [showEnquiry, setShowEnquiry] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-  
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  const shouldAnimate = !isMobile && !prefersReducedMotion;
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-      {/* Deep dark base with premium grain */}
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-28 pb-16">
+      {/* Dark Background */}
       <div className="absolute inset-0 bg-[#030306]" />
-      
-      {/* 3D Grid Effect */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
-          transform: 'perspective(500px) rotateX(60deg)',
-          transformOrigin: 'center top',
-        }} />
-      </div>
-      
-      {/* Animated gradient orbs - Electric Blue & Neon Purple */}
-      <motion.div 
-        style={{ y }}
-        animate={{ 
-          x: [0, 80, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1]
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/4 w-[700px] h-[700px] bg-neon-purple/30 rounded-full blur-[120px]" 
-      />
-      <motion.div 
-        animate={{ 
-          x: [0, -60, 0],
-          y: [0, 60, 0],
-          scale: [1, 1.15, 1]
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-neon-cyan/25 rounded-full blur-[100px]" 
-      />
-      <motion.div 
-        animate={{ 
-          x: [0, 40, 0],
-          y: [0, -70, 0],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/2 right-1/3 w-[500px] h-[500px] bg-[#4361EE]/20 rounded-full blur-[80px]" 
-      />
 
-      {/* Cinematic Hero Background */}
-      <motion.div 
-        style={{ scale: imageScale }}
-        className="absolute inset-0 z-0"
-      >
-        <img 
-          src="https://design-engine.io/img_bank/girl.webp" 
-          alt="Design Engine Creative Student"
-          className="w-full h-full object-cover opacity-30"
-        />
-        {/* Electric overlay */}
-        <div className="absolute inset-0 mix-blend-overlay bg-gradient-to-br from-neon-purple/40 via-transparent to-neon-cyan/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#030306] via-[#030306]/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030306] via-[#030306]/60 to-transparent" />
-      </motion.div>
-
-      {/* Floating particles */}
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 rounded-full bg-neon-cyan"
+      {/* 3D Grid */}
+      <div className="absolute inset-0 opacity-15 hidden sm:block">
+        <div
+          className="absolute inset-0"
           style={{
-            left: `${5 + i * 5}%`,
-            top: `${10 + (i % 7) * 12}%`,
-          }}
-          animate={{
-            y: [0, -60, 0],
-            opacity: [0.2, 0.8, 0.2],
-            scale: [1, 1.5, 1],
-          }}
-          transition={{
-            duration: 4 + i * 0.2,
-            repeat: Infinity,
-            delay: i * 0.15,
+            backgroundImage: `
+              linear-gradient(rgba(255,193,7,0.08) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,193,7,0.08) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+            transform: "perspective(500px) rotateX(60deg)",
           }}
         />
-      ))}
+      </div>
 
-      <motion.div style={{ opacity }} className="container relative z-10 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          {/* Premium Badge with #ffc107 thin border */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center mb-6 md:mb-8"
-          >
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-[#ffc107]">
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              >
-                <Zap className="w-4 h-4 text-neon-cyan" />
-              </motion.div>
-              <span className="text-sm font-medium text-white/90">
-                India's Premier Animation & Design Academy
+      {shouldAnimate ? (
+        <>
+          {/* Animated Orbs (CSS-based for better LCP) */}
+          <div className="orb orb-1 absolute pointer-events-none" aria-hidden="true" />
+
+          <div className="orb orb-2 absolute pointer-events-none" aria-hidden="true" />
+
+          <div className="orb orb-3 absolute pointer-events-none hidden sm:block" aria-hidden="true" />
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 mix-blend-overlay bg-gradient-to-br from-[#ffc107]/30 via-transparent to-[#ffd54f]/20" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#030306] via-[#030306]/80 to-transparent" aria-hidden="true" />
+        </>
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#030306] via-[#09090d] to-[#171717]" aria-hidden="true" />
+          <div className="absolute inset-0 mix-blend-overlay bg-gradient-to-br from-[#ffc107]/30 via-transparent to-[#ffd54f]/20" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#030306] via-[#030306]/80 to-transparent" aria-hidden="true" />
+        </>
+      )}
+
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto text-center space-y-8 sm:space-y-10">
+
+          {/* Badge */}
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-[#ffc107]">
+              <Zap className="w-4 h-4 text-[#ffc107]" />
+              <span className="text-xs sm:text-sm font-medium text-white/90">
+                Delhi's Premier Animation & Design Academy
               </span>
-              <Award className="w-4 h-4 text-neon-purple" />
+              <Award className="w-4 h-4 text-[#ffd54f]" />
             </div>
-          </motion.div>
+          </div>
 
-          {/* Main Headline */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-center mb-6 md:mb-8"
+          {/* Heading - Responsive line breaks for mobile */}
+          <h1
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight px-2"
+            style={{ fontFamily: "Syne, sans-serif" }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight" style={{ fontFamily: 'Syne, sans-serif' }}>
-              <span className="text-white">Master the Art of</span>
-              <br />
-              <span className="bg-gradient-to-r from-neon-purple via-[#4361EE] to-neon-cyan bg-clip-text text-transparent">
-                Animation & Design
-              </span>
-              <br />
-              <span className="text-white/90 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-                for the Indian Industry
-              </span>
-            </h1>
-          </motion.div>
+            <span className="text-white block whitespace-normal">
+              Master Animation, VFX
+              <span className="hidden sm:inline"> &amp; </span>
+              <br className="block sm:hidden" />
+              <span className="sm:hidden">&amp; </span>
+              UI/UX
+            </span>
+            <span className="bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] bg-clip-text text-transparent block mt-2 sm:mt-3">
+              at Delhi's Top AVGC Institute
+            </span>
+          </h1>
 
           {/* Subheadline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center text-base sm:text-lg md:text-xl text-white/60 max-w-3xl mx-auto mb-8 md:mb-10 leading-relaxed px-4"
-          >
-            Transform your creative passion into an industry-ready career. Learn from 
-            professionals at <span className="text-neon-cyan font-medium">DNEG</span>, 
-            <span className="text-neon-purple font-medium"> RED CHILLIES</span> & 
-            <span className="text-[#4361EE] font-medium"> Prime Focus</span> veterans.
-          </motion.p>
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed px-2">
+            Launch a high-paying creative career in Delhi NCR. Build a production-ready portfolio under veterans from <span className="text-[#ffc107] font-medium">DNEG</span>,<span className="text-[#ffd54f] font-medium"> Red Chillies</span> &<span className="text-[#ffb300] font-medium"> Prime Focus</span>.
+          </p>
 
           {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 mb-12 md:mb-16"
-          >
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button 
-                size="lg" 
-                className="w-full sm:w-auto min-w-[220px] bg-gradient-to-r from-neon-purple to-neon-cyan text-white font-bold rounded-full text-lg py-6 shadow-neon hover:shadow-neon-lg transition-all duration-300"
-                onClick={() => setShowEnquiry(true)}
-              >
-                <Rocket className="w-5 h-5 mr-2" />
-                Start Your Journey
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="w-full sm:w-auto min-w-[200px] bg-white/5 backdrop-blur-sm border border-[#ffc107] hover:bg-white/10 hover:border-[#ffc107] font-semibold rounded-full text-lg py-6"
-                onClick={() => setShowBrochure(true)}
-              >
-                <Play className="w-5 h-5 mr-2 text-neon-cyan" />
-                Watch Showreel
-              </Button>
-            </motion.div>
-          </motion.div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-4">
+            <Button
+              className="w-full sm:w-[260px] md:w-[280px] bg-gradient-to-r from-[#ffc107] via-[#ffd54f] to-[#ffb300] text-black font-bold rounded-full text-sm sm:text-base md:text-lg py-5 px-6 shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap inline-flex items-center justify-center gap-2"
+              onClick={() => setShowEnquiry(true)}
+            >
+              <Rocket className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" strokeWidth={3} />
+              <span>Book Free Demo Class</span>
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" strokeWidth={3} />
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full sm:w-[260px] md:w-[280px] bg-white/5 backdrop-blur-sm border border-[#ffc107] hover:bg-white/10 hover:border-[#ffc107] font-bold rounded-full text-sm sm:text-base md:text-lg py-5 px-6 text-white whitespace-nowrap inline-flex items-center justify-center gap-2"
+              onClick={() => setShowBrochure(true)}
+            >
+              <Download className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-[#ffc107]" />
+              <span>Download Brochure</span>
+            </Button>
+          </div>
 
-          {/* Stats Grid with Glassmorphism and #ffc107 thin border */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4"
-          >
-            {[
-              { value: "1000+", label: "Industry Partners", icon: Briefcase, color: "from-neon-purple to-[#4361EE]" },
-              { value: "100%*", label: "Internship Guarantee", icon: Award, color: "from-neon-cyan to-neon-green" },
-              { value: "₹12L", label: "Highest Package", icon: Sparkles, color: "from-neon-orange to-neon-pink" },
-              { value: "95%", label: "Placement Rate", icon: Users, color: "from-[#4361EE] to-neon-cyan" },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="relative group"
-              >
-                {/* Glassmorphic card with #ffc107 thin border */}
-                <div className="relative p-4 md:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-[#ffc107] overflow-hidden transition-all duration-300 group-hover:border-[#ffc107] group-hover:bg-white/[0.08]">
-                  {/* Gradient glow on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                  
-                  <div className="relative text-center">
-                    <stat.icon className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 md:mb-3 text-white/40 group-hover:text-white/60 transition-colors" />
-                    <div className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
-                      {stat.value}
-                    </div>
-                    <div className="text-xs md:text-sm text-white/50">{stat.label}</div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          {/* Attribution Box */}
+          <div className="mt-12 sm:mt-20 md:mt-40 lg:mt-48 px-4">
+            <div className="max-w-2xl mx-auto border-2 border-[#ffc107] rounded-lg px-6 sm:px-8 py-5 sm:py-6 bg-white/5 backdrop-blur-sm">
+              <p className="text-sm sm:text-base md:text-lg text-white/80 italic font-light leading-relaxed">
+                Designed by Design Engine students using Gen-AI tools under the mentorship of top AVGC industry faculty.
+              </p>
+            </div>
+          </div>
+
         </div>
-      </motion.div>
+      </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-2"
-      >
-        <span className="text-xs text-white/40">Scroll to explore</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center pt-2"
-        >
-          <motion.div className="w-1.5 h-1.5 rounded-full bg-neon-cyan" />
-        </motion.div>
-      </motion.div>
+      {/* Modals */}
+      {showBrochure && (
+        <Suspense fallback={null}>
+          <BrochureModal
+            isOpen={showBrochure}
+            onClose={() => setShowBrochure(false)}
+          />
+        </Suspense>
+      )}
 
-      {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent" />
-      
-      <BrochureModal isOpen={showBrochure} onClose={() => setShowBrochure(false)} />
-      <EnquiryModal isOpen={showEnquiry} onClose={() => setShowEnquiry(false)} />
+      {showEnquiry && (
+        <Suspense fallback={null}>
+          <EnquiryModal
+            isOpen={showEnquiry}
+            onClose={() => setShowEnquiry(false)}
+          />
+        </Suspense>
+      )}
     </section>
   );
 };
