@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Replace BASE_URL with your production site (e.g. https://www.yoursite.com) -->
+  <url>
+    <loc>https://BASE_URL/</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/courses</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/blog</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/portfolio</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/events</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/quiz</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/student-work</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/franchise</loc>
+  </url>
+  <url>
+    <loc>https://BASE_URL/privacy-policy</loc>
+  </url>
+</urlset>

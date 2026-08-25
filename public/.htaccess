@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /delhi/
+
+# 1. Preserve real files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2. SPA fallback - send all requests to index.html
+RewriteRule ^(?!assets/).*$ index.html [L,QSA]
