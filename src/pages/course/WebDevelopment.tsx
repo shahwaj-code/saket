@@ -1,0 +1,5 @@
+import CourseCampaignPage from "./CourseCampaignPage";
+import image from "@/assets/courses/Video_course.webp";
+
+const WebDevelopment = () => <CourseCampaignPage course={{ name: "Web Development", title: "Web Development Course in Saket", slug: "web-development", image, duration: "8 Months", hours: "160 Hours", focus: "Frontend + Web Projects", description: "Learn the foundations of modern web development through structured practice, responsive interfaces and real project delivery.", curriculum: ["Web Foundations", "HTML & CSS", "JavaScript", "Responsive Development", "Frontend Projects", "Portfolio & Deployment"], outcomes: ["Responsive page builds", "Interactive frontend features", "Structured project workflow", "Deployment-ready web work", "A practical development portfolio"], careers: ["Web Developer", "Frontend Developer", "Digital Designer"], faqs: [["What will I build?", "Responsive websites and interactive frontend projects."], ["Is portfolio work included?", "Yes, project delivery and portfolio development are included."]] }} />;
+export default WebDevelopment;

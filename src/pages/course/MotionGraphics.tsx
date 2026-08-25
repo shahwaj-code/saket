@@ -1,0 +1,5 @@
+import CourseCampaignPage from "./CourseCampaignPage";
+import image from "@/assets/courses/motion-graphic.webp";
+
+const MotionGraphics = () => <CourseCampaignPage course={{ name: "Motion Graphics & Video", title: "Motion Graphics Course in Saket", slug: "motion-graphics", image, duration: "8 Months", hours: "160 Hours", focus: "Motion + Video Design", description: "Learn to turn graphic design ideas into expressive motion and video work through a project-led learning path.", curriculum: ["Motion Principles", "Typography in Motion", "Visual Transitions", "Video Design", "Campaign Motion", "Showreel & Portfolio"], outcomes: ["Animated typography studies", "Motion-led campaign concepts", "Video design exercises", "A curated motion showreel", "Portfolio-ready final project"], careers: ["Motion Designer", "Video Designer", "Digital Designer"], faqs: [["What does the course cover?", "Motion principles, typography, video design and showreel development."], ["Will I create a showreel?", "Yes, the final stage focuses on presenting your strongest motion work."]] }} />;
+export default MotionGraphics;

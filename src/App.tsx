@@ -12,6 +12,12 @@ const StickyButtons = lazy(() => import("@/components/StickyButtons"));
 
 // Lazy loading pages (IMPORTANT FOR TBT)
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
+const GraphicDesign = lazy(() => import("./pages/course/GraphicDesign"));
+const UIUX = lazy(() => import("./pages/course/UIUX"));
+const WebDevelopment = lazy(() => import("./pages/course/WebDevelopment"));
+const Animation = lazy(() => import("./pages/course/Animation"));
+const VFX = lazy(() => import("./pages/course/VFX"));
+const MotionGraphics = lazy(() => import("./pages/course/MotionGraphics"));
 const QuizCourseDetail = lazy(() => import("./pages/QuizCourseDetail"));
 // const PortfolioDetail = lazy(() => import("./pages/PortfolioDetail"));
 // const Portfolio = lazy(() => import("./pages/Portfolio"));
@@ -71,6 +77,12 @@ const App = () => (
 
               {/* Public Routes */}
               <Route path="/" element={<Index />} />
+              <Route path="/course/graphic-design" element={<GraphicDesign />} />
+              <Route path="/course/ui-ux" element={<UIUX />} />
+              <Route path="/course/web-development" element={<WebDevelopment />} />
+              <Route path="/course/animation" element={<Animation />} />
+              <Route path="/course/vfx" element={<VFX />} />
+              <Route path="/course/motion-graphics" element={<MotionGraphics />} />
               <Route path="/course/:slug" element={<CourseDetail />} />
               <Route path="/quiz-course/:slug" element={<QuizCourseDetail />} /> {/* New route */}
               <Route path="/:slug" element={<QuizCourseDetail />} />

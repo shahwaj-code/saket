@@ -1,779 +1,113 @@
-import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import {
-  ArrowLeft,
-  Clock,
-  Users,
-  Star,
-  Award,
-  Globe,
-  CheckCircle2,
-  Calendar,
-  MapPin,
-  Play,
-  Download,
-  Sparkles,
-  Video,
-  Palette,
-  Layers,
-  Zap,
-  TrendingUp,
-  BadgeCheck,
-  GraduationCap,
-  Briefcase,
-  Target,
-  Film,
-  PenTool,
-  Monitor,
-  Gamepad2,
-  ChevronDown
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowDown, ArrowRight, Check, ChevronDown, Clock3, Layers3, Palette, Sparkles, Target, X } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EnquiryModal from "@/components/EnquiryModal";
 import StickyButtons from "@/components/StickyButtons";
-import { toast } from "sonner";
+import graphicDesignImage from "@/assets/courses/graphic.webp";
+import advertisementImage from "@/assets/student_work/Advertisement Design.webp";
+import brandingImage from "@/assets/student_work/Product Branding Design.webp";
+import thumbnailImage from "@/assets/student_work/Youtube Thumbnail.webp";
 
-// Import course images
-import animationImg from '../assets/courses/Animation.webp';
-import vfxImg from '../assets/courses/vfx.webp';
-import generativeAiImg from '../assets/courses/Generative-ai.webp';
-import motionGraphicsImg from '../assets/courses/motion-graphic.webp';
-import gameDesignImg from '../assets/courses/game_img.webp';
-import uiUxImg from '../assets/courses/ui-ux.webp';
-import graphicDesignImg from '../assets/courses/graphic.webp';
-import videoEditingImg from '../assets/courses/Video_course.webp';
-import degreeCourseImg from '../assets/courses/degree-course.webp';
+const canonicalUrl = "https://design-engine.io/saket/course/digital-graphic-design-essentials";
+const courseName = "Digital Graphic Design Essentials";
 
-// Course data with all 9 courses
-// Course data - updated to match Courses.jsx
-const courseData = {
-  "B.sc-digital-media-ai-filmmaking": {
-    title: "B.Sc in Vocational Multimedia & Animation",
-    seoTitle: "B.Sc Multimedia, Animation & AI Filmmaking in Saket, Delhi | Design Engine",
-    tagline: "Hands-on B.Sc degree for vocational multimedia and animation careers.",
-    description: "UGC-approved B.Sc degree offering intense specialization in 3D production pipelines, cinematic VFX, advanced motion graphics, and job showreels.",
-    seoDescription: "Join Design Engine Saket for a 3-year B.Sc in Vocational Multimedia, Animation and AI Filmmaking in South Delhi. Build a studio-ready portfolio with VFX, motion graphics, 3D, Unreal Engine and industry internship.",
-    seoHiddenH1: "B.Sc in Vocational Multimedia, Animation & AI Filmmaking – Saket, Delhi",
-    ogUrl: "https://design-engine.io/saket/B.sc-digital-media-ai-filmmaking",
-    ogImage: "https://design-engine.io/path-to-your-bsc-multimedia-hero-image.jpg",
-    longDescription: "This B.Sc degree is designed for students who want to build a career in vocational multimedia and animation. You will learn animation production, multimedia storytelling, motion graphics, VFX compositing, and professional portfolio development through real-world projects and internships.",
-    gradient: "from-[#22c55e] to-[#14b8a6]",
-    color: "#22c55e",
-    duration: "3 Years",
-    icon: "GraduationCap",
-    image: degreeCourseImg,
-    highlights: [
-      "Creative media and AI filmmaking",
-      "Industry-ready portfolio",
-      "Internship & real-world projects",
-      "Hands-on production workflows",
-      "AI-assisted content creation",
-      "Professional showreel development"
-    ],
-    tools: [
-      "Illustrator", "Photoshop", "Premiere Pro", "DaVinci Resolve",
-      "After Effects", "Maya", "Blender", "Unreal Engine",
-      "AI filmmaking tools", "Storyboarding software"
-    ],
-    outcomes: [
-      "Build a professional filmmaking portfolio",
-      "Master AI-assisted content creation",
-      "Create cinematic digital media projects",
-      "Intern with industry production teams",
-      "Launch a career in digital filmmaking and media"
-    ],
-    modules: [
-      {
-        title: "Semester I – Creative Technologist",
-        duration: "6 Months",
-        topics: [
-          "Design fundamentals, color psychology & visual aesthetics",
-          "Introduction to AI tools and prompt engineering",
-          "Brand identity and creative design concepts",
-          "Graphic designing using Illustrator & Photoshop",
-          "Modern layout and content creation techniques"
-        ],
-      },
-      {
-        title: "Semester II – Digital Content Creator",
-        duration: "6 Months",
-        topics: [
-          "Storytelling, scripting and content planning",
-          "Audio basics and sound design fundamentals",
-          "AI-based video creation and filmmaking",
-          "Video editing and post-production workflows",
-          "Motion graphics and cinematic color grading"
-        ],
-      },
-      {
-        title: "Semester III – 3D Visualization Specialist",
-        duration: "6 Months",
-        topics: [
-          "3D pipeline, workflow and production basics",
-          "Lighting, materials and realistic rendering",
-          "AI-assisted 3D modeling techniques",
-          "3D design using Maya and sculpting tools",
-          "Character and environment creation"
-        ],
-      },
-      {
-        title: "Semester IV – VFX Compositor",
-        duration: "6 Months",
-        topics: [
-          "Digital compositing and VFX fundamentals",
-          "3D workflow using Blender",
-          "Node-based compositing techniques",
-          "Rotoscoping and visual cleanup",
-          "Matchmoving and tracking for VFX"
-        ],
-      },
-      {
-        title: "Semester V – Real-time Technical Artist",
-        duration: "6 Months",
-        topics: [
-          "Virtual production and real-time workflows",
-          "Media law and creative entrepreneurship",
-          "Real-time rendering using Unreal Engine",
-          "Interactive design and blueprint systems"
-        ],
-      },
-      {
-        title: "Semester VI – Industry Immersion",
-        duration: "6 Months",
-        topics: [
-          "Full-time industry internship experience",
-          "Portfolio and professional showreel development",
-          "Real-world production and project exposure",
-          "Industry-level workflow and collaboration"
-        ],
-      },
-    ],
-  },
-  "master-in-gen-ai": {
-    title: "MASTER IN GEN AI",
-    tagline: "Master generative AI tools and techniques for creative professionals",
-    description: "Master generative AI tools and techniques for creative professionals.",
-    longDescription: "Become an expert in generative AI with hands-on training in the latest tools and methodologies used by top creative professionals worldwide.",
-    gradient: "from-[#ffc107] to-[#ffb300]",
-    color: "#ffc107",
-    duration: "2 Months",
-    icon: "Sparkles",
-    image: generativeAiImg,
-    highlights: [
-      "Advanced AI tools mastery",
-      "Creative workflow integration",
-      "Portfolio development",
-      "Industry applications",
-      "Career advancement",
-      "Certification"
-    ],
-    tools: [
-      "Midjourney", "DALL-E", "Stable Diffusion", "ChatGPT",
-      "RunwayML", "Adobe Firefly", "Nano Banana", "Claude",
-      "Veo3", "Kling", "Grok", "Seedance", "Suno AI",
-      "ElevenLabs", "Bolt", "Loveable", "Canva AI",
-      "Framer AI", "Notebook LM", "Deepseek", "Gamma"
-    ],
-    outcomes: [
-      "Master generative AI tools",
-      "Create AI-enhanced creative work",
-      "Integrate AI in professional workflows",
-      "Build innovative portfolios",
-      "Lead AI-driven projects",
-      "Advance career in AI creative fields"
-    ],
-  },
-  "gen-2-0-ai-generalist-course": {
-    title: "GEN 2.0: AI GENERALIST COURSE",
-    tagline: "Master AI across creative industries. Learn prompt engineering, AI content creation, video generation, and build a portfolio.",
-    description: "Master AI across creative industries. Learn prompt engineering, AI content creation, video generation, and build a portfolio.",
-    longDescription: "This comprehensive course transforms you into an AI generalist, equipped with knowledge across AI creativity, content production, and practical applications in design, animation, gaming, and media.",
-    gradient: "from-[#ffc107] to-[#ffb300]",
-    color: "#ffc107",
-    duration: "12 Months",
-    icon: "Sparkles",
-    image: generativeAiImg,
-    highlights: [
-      "🎯 Industry-Driven Curriculum",
-      "💡 Practical Learning, Not Just Theory",
-      "👨‍🏫 Mentorship by Design Experts",
-      "🎬 Creative Exposure & Industry Workshops",
-      "📈 Career Guidance & Placement Support",
-      "🚀 Portfolio Power with DesignEngine"
-    ],
-    tools: [
-      "Midjourney", "ChatGPT", "DALL-E 3", "Stable Diffusion",
-      "RunwayML", "Adobe Firefly", "Leonardo AI", "Claude",
-      "ElevenLabs", "Synthesia", "Canva AI", "Framer AI"
-    ],
-    outcomes: [
-      "Understand AI ecosystem clearly",
-      "Master prompt engineering & AI dialogue",
-      "Create designs, logos, and creative assets using AI",
-      "Produce social media content, videos, and animations",
-      "Build a job-ready AI portfolio",
-      "Launch freelance or full-time AI creative career"
-    ],
-    modules: [
-      {
-        title: "Term 1: AI Foundations & Creative Intelligence",
-        duration: "6 Months",
-        topics: [
-          "Introduction to Artificial Intelligence",
-          "Understanding Generative AI in Creative Industries",
-          "Fundamentals of Prompt Engineering",
-          "Advanced Prompting Techniques & Frameworks",
-          "Branding and Identity Creation using AI Tools",
-          "Image Generation and Editing with AI"
-        ],
-      },
-      {
-        title: "Term 2: AI Production & Content Creation Mastery",
-        duration: "6 Months",
-        topics: [
-          "AI Tools for Visual Enhancement and Design",
-          "Video Creation using AI Platforms",
-          "Motion Graphics and Animation with AI",
-          "AI Cinematics & Video Generation",
-          "AI Voiceovers, Music & Audio Cleanup",
-          "Capstone Project: AI-Based Creative Portfolio"
-        ],
-      },
-    ],
-  },
-  "expert-program-digital-content-animation": {
-    title: "Expert Program in Digital Content & Animation",
-    tagline: "Create stunning motion graphics and animations for various media.",
-    description: "Create stunning motion graphics and animations for various media.",
-    longDescription: "Learn to create professional animated content for film, games, advertising, and digital platforms. Master industry-standard workflows and production pipelines.",
-    gradient: "from-[#9c27b0] to-[#e91e63]",
-    color: "#9c27b0",
-    duration: "19 Months",
-    icon: "Film",
-    image: motionGraphicsImg,
-    highlights: [
-      "Advanced animation techniques",
-      "Digital content production",
-      "Industry-standard workflows",
-      "Professional portfolio",
-      "Mentorship sessions",
-      "Career guidance"
-    ],
-    tools: [
-      "Photoshop", "Illustrator", "After Effects", "Premiere Pro",
-      "Maya", "Blender", "Substance Painter", "ZBrush"
-    ],
-    outcomes: [
-      "Master advanced animation and VFX",
-      "Create professional digital content",
-      "Build comprehensive portfolio",
-      "Lead animation projects"
-    ],
-  },
-  "rendercraft-3d-animation-vfx": {
-    title: "RenderCraft: 3D Animation & VFX",
-    tagline: "Master 3D rendering, animation, and visual effects for film and games.",
-    description: "Master 3D rendering, animation, and visual effects for film and games.",
-    longDescription: "Learn industry-standard tools and workflows for creating stunning 3D content for film, games, and advertising. Master rendering, lighting, and VFX pipelines.",
-    gradient: "from-[#2196f3] to-[#00bcd4]",
-    color: "#2196f3",
-    duration: "12 Months",
-    icon: "Monitor",
-    image: vfxImg,
-    highlights: [
-      "Advanced 3D rendering",
-      "VFX pipeline mastery",
-      "Industry tools & software",
-      "Real-world projects",
-      "Portfolio development",
-      "Placement support"
-    ],
-    tools: [
-      "Autodesk Maya", "Blender", "Nuke", "Houdini",
-      "Substance Painter", "ZBrush", "Arnold Renderer", "After Effects"
-    ],
-    outcomes: [
-      "Master advanced 3D rendering and VFX",
-      "Create photorealistic animations",
-      "Build professional portfolio",
-      "Work in production pipelines"
-    ],
-  },
-  "video-editing": {
-    title: "Video Editing",
-    tagline: "Professional video editing skills for film, advertising, and content creation.",
-    description: "Professional video editing skills for film, advertising, and content creation.",
-    longDescription: "This comprehensive video editing course covers everything from basic cutting to advanced color grading. Learn to create engaging content for YouTube, social media, and professional productions.",
-    gradient: "from-[#ffc107] to-[#ffb300]",
-    color: "#ffc107",
-    duration: "12 Months",
-    icon: "Film",
-    image: videoEditingImg,
-    highlights: [
-      "Real projects",
-      "Demo reel creation",
-      "Mentorship",
-      "Job support",
-      "Portfolio building",
-      "Career guidance"
-    ],
-    tools: ["Premiere Pro", "After Effects", "DaVinci Resolve", "Final Cut Pro", "Audition"],
-    outcomes: [
-      "Master editing tools",
-      "Create professional videos",
-      "Build demo reel",
-      "Start editing career",
-      "Advanced color grading",
-      "Professional sound design"
-    ],
-  },
-  "digital-content-motion-design": {
-    title: "Digital Content & Motion Design",
-    tagline: "Create engaging digital content with advanced motion design techniques.",
-    description: "Create engaging digital content with advanced motion design techniques.",
-    longDescription: "Learn to combine storytelling with visual effects for modern digital platforms. Create engaging content for Instagram, TikTok, YouTube, and other social media platforms.",
-    gradient: "from-[#00bcd4] to-[#0097a7]",
-    color: "#00bcd4",
-    duration: "12 Months",
-    icon: "Layers",
-    image: motionGraphicsImg,
-    highlights: [
-      "Social media content creation",
-      "Motion design fundamentals",
-      "Interactive animations",
-      "Platform-specific content",
-      "Portfolio development",
-      "Freelance preparation"
-    ],
-    tools: [
-      "After Effects", "Premiere Pro", "Photoshop", "Illustrator",
-      "Cinema 4D", "Adobe Audition"
-    ],
-    outcomes: [
-      "Create engaging content for all major platforms",
-      "Master motion design for digital marketing",
-      "Build interactive animations",
-      "Launch freelance motion design career"
-    ],
-  },
-  "dreamengine-animation-unreal": {
-    title: "DreamEngine: Animation with Unreal",
-    tagline: "Learn animation techniques using Unreal Engine for games and interactive media.",
-    description: "Learn animation techniques using Unreal Engine for games and interactive media.",
-    longDescription: "Learn to create stunning animated sequences, virtual cinematography, and interactive experiences for film, games, and virtual production using Unreal Engine.",
-    gradient: "from-[#9c27b0] to-[#3f51b5]",
-    color: "#9c27b0",
-    duration: "28 Months",
-    icon: "Gamepad2",
-    image: gameDesignImg,
-    highlights: [
-      "Unreal Engine mastery",
-      "Real-time animation",
-      "Cinematic content creation",
-      "Virtual cinematography",
-      "Game development skills",
-      "Portfolio building"
-    ],
-    tools: [
-      "Unreal Engine", "Maya", "Blender", "Substance Painter",
-      "ZBrush", "Photoshop", "After Effects"
-    ],
-    outcomes: [
-      "Master Unreal Engine for animation",
-      "Create cinematic content",
-      "Develop real-time experiences",
-      "Work in virtual production"
-    ],
-  },
-  "ui-ux-design": {
-    title: "UI/UX Design",
-    seoTitle: "UI/UX Design Course in Saket, Delhi | 9-Month Job-Ready Program",
-    tagline: "Master user research frameworks, component-driven wireframing, high-fidelity Figma prototyping, and mobile app design systems.",
-    description: "Master user research frameworks, component-driven wireframing, high-fidelity Figma prototyping, and mobile app design systems.",
-    seoDescription: "Join a 9-month UI/UX Design course at Design Engine Saket. Learn user-centered design, UX research, design systems and interactive prototypes with Figma, Adobe CC, Generative AI, HTML, CSS and WordPress to build a hire-ready portfolio.",
-    seoHiddenH1: "UI/UX Design Course in Saket, Delhi",
-    ogUrl: "https://design-engine.io/saket/ui-ux-design",
-    ogImage: "https://design-engine.io/path-to-your-ui-ux-hero-image.jpg",
-    seoImageAlt: "Students working on UI/UX design projects at Design Engine Saket",
-    longDescription: "This comprehensive UI/UX course takes you from beginner to job-ready designer. Learn industry best practices, design thinking methodologies, and how to create portfolios that impress employers.",
-    gradient: "from-[#ffc107] to-[#ffd54f]",
-    color: "#ffc107",
-    duration: "9 Months",
-    icon: "Palette",
-    image: uiUxImg,
-    highlights: [
-      "Real-world projects",
-      "Portfolio development",
-      "Mentorship",
-      "Placement support",
-      "Industry tools training",
-      "Career guidance"
-    ],
-    tools: ["Figma", "Adobe XD", "Photoshop", "Illustrator", "HTML5", "CSS3", "Generative AI"],
-    outcomes: [
-      "Create user-centered designs",
-      "Build interactive prototypes",
-      "Conduct user research",
-      "Develop design systems",
-      "Launch your design career",
-      "Work on real products"
-    ],
-  },
-  "digital-graphic-design-essentials": {
-    title: "Graphic Design",
-    seoTitle: "Graphic Design Course in Saket, Delhi | 7-Month Digital Design Program",
-    tagline: "Learn the essentials of digital graphic design, from branding to layout and mobile UI basics.",
-    description: "Learn the essentials of digital graphic design, from branding to layout and mobile UI basics.",
-    seoDescription: "Join a 7-month graphic design course at Design Engine Saket. Learn digital design fundamentals, Figma essentials, UI design basics and modern tools like Photoshop, Illustrator, Canva and Generative AI while building a portfolio with real brand projects.",
-    seoHiddenH1: "Graphic Design Course in Saket, Delhi",
-    ogUrl: "https://design-engine.io/saket/graphic-design",
-    ogImage: "https://design-engine.io/path-to-your-graphic-design-hero-image.jpg",
-    seoImageAlt: "Students working on digital graphic design projects at Design Engine Saket",
-    longDescription: "Perfect for beginners looking to start their digital design journey, this course covers practical skills and real-world applications. Learn Figma, digital illustration, web design fundamentals, and build a strong portfolio.",
-    gradient: "from-[#bb86fc] to-[#6200ff]",
-    color: "#bb86fc",
-    duration: "7 Months",
-    icon: "PenTool",
-    image: graphicDesignImg,
-    highlights: [
-      "Digital design fundamentals",
-      "Figma essentials",
-      "UI design basics",
-      "Portfolio building",
-      "Branding principles",
-      "Layout design"
-    ],
-    tools: ["Photoshop", "Illustrator", "InDesign", "Figma", "Canva", "Generative AI"],
-    outcomes: [
-      "Master digital design fundamentals",
-      "Design with Figma and modern tools",
-      "Create UI/UX basics",
-      "Build portfolio with 10+ projects"
-    ],
-  }
-};
+const modules = [
+  { number: "01", title: "Design Fundamentals", summary: "Build the visual thinking behind every strong design.", items: ["Design Principles", "Composition", "Typography", "Color Theory", "Visual Hierarchy", "Layout Design", "Color Psychology", "Design Thinking"], practical: "Design fundamentals exercise, typography & color board, layout composition project", output: "Design fundamentals project", icon: Palette },
+  { number: "02", title: "Professional Graphic Design", summary: "Turn ideas into polished, production-ready communication.", items: ["Image editing", "Vector design", "Publication / layout design", "Production design"], practical: "Poster, brochure, flyer, social media creative, advertisement and brand collateral", output: "Professional graphic design work", icon: Layers3 },
+  { number: "03", title: "Digital Content Design", summary: "Create a consistent visual system for digital channels.", items: ["Canva", "Adobe Express", "Lightroom", "Digital content workflow"], practical: "Instagram post set, reel cover, YouTube thumbnail, digital campaign creatives and template system", output: "Digital content campaign", icon: Target },
+  { number: "04", title: "Generative AI for Designers", summary: "Use AI inside a considered design workflow, with design skill in control.", items: ["Generative AI fundamentals", "Prompt engineering", "AI image generation", "AI-assisted ideation", "Image enhancement", "AI + Photoshop / Illustrator workflow"], practical: "AI-assisted campaign concept, prompt library and AI + Photoshop / Illustrator creative", output: "AI-assisted design concept", icon: Sparkles },
+  { number: "05", title: "Branding & Visual Communication", summary: "Shape a brand from its first mark to a complete communication system.", items: ["Logo design", "Brand identity", "Typography system", "Color system", "Brand guidelines", "Marketing collateral"], practical: "Complete mini brand identity, logo system, brand guideline and campaign collateral", output: "Mini brand identity system", icon: Palette },
+  { number: "06", title: "Portfolio & Industry Project", summary: "Curate your strongest work into a clear professional story.", items: ["Portfolio development", "Art direction", "Project presentation", "Industry workflow"], practical: "Brand identity, social campaign, advertising campaign, print/digital portfolio and AI-assisted creative campaign", output: "Final design portfolio", icon: Target },
+];
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Sparkles,
-  Video,
-  Palette,
-  Layers,
-  Film,
-  PenTool,
-  Monitor,
-  Gamepad2,
-};
+const faqs = [
+  ["What is the course name?", "Digital Graphic Design Essentials."],
+  ["How long is the course?", "The course runs for 8 months and includes 160 hours of learning."],
+  ["What will I learn?", "Design fundamentals, professional graphic design, digital content design, Generative AI for designers, branding and visual communication, and portfolio project work."],
+  ["Will I learn Photoshop, Illustrator and InDesign?", "Yes. Photoshop, Illustrator and InDesign are part of the professional graphic design and branding workflows."],
+  ["Is Canva included?", "Yes. Canva is included in Digital Content Design and the Portfolio & Industry Project workflow."],
+  ["Will I build a portfolio?", "Yes. Portfolio development is the final course stage, with brand identity, campaign creatives, print/digital collateral and AI-assisted design outcomes."],
+  ["What career directions are mapped?", "Graphic Designer, Brand Designer and Digital Designer."],
+];
 
 const CourseDetail = () => {
-  const { slug } = useParams<{ slug: string }>();
-  
-  // Slug alias mapping to handle variations
-  const slugAliases: Record<string, string> = {
-    "degree-in-animation-design": "B.sc-digital-media-ai-filmmaking",
-  };
-  
-  const normalizedSlug = slugAliases[slug as string] || slug;
-  let course = courseData[normalizedSlug as keyof typeof courseData];
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // If direct lookup fails, try a robust slug/title match to avoid mismatches
-  if (!course && slug) {
-    const slugify = (s: string) =>
-      String(s)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-
-    const target = slugify(slug);
-
-    // try matching keys by slugified forms
-    const foundKey = Object.keys(courseData).find((k) => slugify(k) === target || k.toLowerCase() === slug!.toLowerCase());
-    if (foundKey) {
-      course = courseData[foundKey as keyof typeof courseData];
-    } else {
-      // try matching by title
-      const foundByTitle = Object.values(courseData).find((c: any) => slugify(c.title || "") === target);
-      if (foundByTitle) course = foundByTitle as any;
-    }
-  }
-  const [showStickyBar, setShowStickyBar] = useState(false);
-  const [showEnquiry, setShowEnquiry] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowStickyBar(window.scrollY > 500);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  if (!course) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: '#030306',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1rem'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{
-            fontSize: '2.25rem',
-            fontWeight: 'bold',
-            marginBottom: '1rem',
-            color: '#ffffff'
-          }}>Course Not Found</h1>
-          <Link to="/courses" style={{
-            color: '#ffc107',
-            textDecoration: 'underline',
-            fontSize: '1rem',
-            cursor: 'pointer'
-          }} onMouseEnter={(e) => e.currentTarget.style.color = '#ffd54f'} onMouseLeave={(e) => e.currentTarget.style.color = '#ffc107'}>
-            Back to Courses
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const normalizedHighlights = Array.from({ length: 6 }, (_, idx) =>
-    course.highlights[idx] || "Practical skills from real brand projects"
-  );
-
-  const normalizedOutcomes = Array.from({ length: 6 }, (_, idx) =>
-    course.outcomes[idx] || "Industry-driven hands-on learning"
-  );
-
-  const IconComponent = iconMap[course.icon] || Sparkles;
+  const openEnquiry = () => setIsEnquiryOpen(true);
 
   return (
-    <>
+    <div className="min-h-screen overflow-hidden bg-[#090a0b] text-white">
       <Helmet>
-        <title>{course.seoTitle || `${course.title} | Design Engine`}</title>
-        <meta name="description" content={course.seoDescription || course.description} />
-        <meta property="og:title" content={course.seoTitle || `${course.title} | Design Engine`} />
-        <meta property="og:description" content={course.seoDescription || course.description} />
-        <meta property="og:url" content={course.ogUrl || "https://design-engine.io"} />
+        <title>Graphic Design Course in Saket | Design Engine</title>
+        <meta name="description" content="Build practical graphic design skills across design fundamentals, professional production, digital content, AI-assisted design, branding and portfolio development at Design Engine Saket." />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content="Graphic Design Course in Saket | Design Engine" />
+        <meta property="og:description" content="Build practical graphic design skills across design fundamentals, professional production, digital content, AI-assisted design, branding and portfolio development at Design Engine Saket." />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={course.ogImage || "https://design-engine.io/path-to-your-default-og-image.jpg"} />
-        {course.seoImageAlt && <meta property="og:image:alt" content={course.seoImageAlt} />}
+        <meta property="og:image" content={canonicalUrl.replace("course/digital-graphic-design-essentials", "assets/courses/graphic.webp")} />
+        <meta name="robots" content="index, follow" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org", "@type": "Course", name: courseName,
+          description: "Practical graphic design course covering fundamentals, production, digital content, AI-assisted design, branding and portfolio development.",
+          provider: { "@type": "EducationalOrganization", name: "Design Engine", url: "https://design-engine.io/saket" },
+          timeRequired: "P8M", educationalLevel: "Professional", courseMode: "On-site",
+          url: canonicalUrl, occupationalCredentialAwarded: "Graphic Design Portfolio"
+        })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-[#030306] text-white">
-        <Navbar />
-
-        {/* Sticky Bar */}
-        <AnimatePresence>
-          {showStickyBar && (
-            <motion.div
-              initial={{ y: -100 }}
-              animate={{ y: 0 }}
-              exit={{ y: -100 }}
-              className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-b border-[#ffc107]/20"
-            >
-              <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <IconComponent className="w-8 h-8 text-[#ffc107]" />
-                  <div>
-                    <h3 className="font-bold">{course.title}</h3>
-                    <p className="text-sm text-gray-400">{course.tagline}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Button
-                    onClick={() => setShowEnquiry(true)}
-                    className="bg-[#ffc107] text-black hover:bg-[#ffb300] px-6 py-2"
-                  >
-                    Enquiry Now
-                  </Button>
-                </div>
+      <Navbar />
+      <main>
+        <section className="relative border-b border-white/10 bg-[#111315] pt-32 pb-16 lg:pt-40 lg:pb-24">
+          <div className="absolute inset-0 opacity-40" style={{ backgroundImage: "linear-gradient(rgba(255,193,7,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,193,7,.06) 1px, transparent 1px)", backgroundSize: "64px 64px" }} />
+          <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.05fr_.95fr] lg:px-12">
+            <div>
+              <p className="mb-6 text-xs font-semibold tracking-[0.24em] text-[#ffc107]">GRAPHIC DESIGN <span className="text-white/30">•</span> DIGITAL DESIGN <span className="text-white/30">•</span> SAKET</p>
+              <h1 className="max-w-3xl text-5xl leading-[.98] tracking-[-0.03em] text-white sm:text-7xl lg:text-[84px]">Graphic Design <span className="text-[#ffc107]">Course</span> in Saket</h1>
+              <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/65">Build practical graphic design skills from design fundamentals and professional production to digital content, AI-assisted design, branding and portfolio development.</p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <button onClick={openEnquiry} className="inline-flex items-center gap-3 bg-[#ffc107] px-6 py-3.5 text-sm font-bold text-black transition-transform hover:-translate-y-1">Enquire About The Course <ArrowRight className="h-4 w-4" /></button>
+                <a href="#curriculum" className="inline-flex items-center gap-3 border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:border-[#ffc107] hover:text-[#ffc107]">Explore Curriculum <ArrowDown className="h-4 w-4" /></a>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Hero Section */}
-        <section className="relative pt-20 pb-16 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#ffc107]/10 to-transparent" />
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="flex items-center gap-2 mb-4">
-                  <BadgeCheck className="w-5 h-5 text-[#ffc107]" />
-                  <span className="text-sm text-[#ffc107] font-medium">Industry Recognized</span>
-                </div>
-
-                <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                  {course.title}
-                </h1>
-
-                <p className="text-xl text-gray-300 mb-8">
-                  {course.tagline}
-                </p>
-
-                <div className="flex flex-wrap gap-4 mb-8">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-[#ffc107]" />
-                    <span>{course.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-[#ffc107]" />
-                    <span>{(course as any).studentsEnrolled || 500}+ Students</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-[#ffc107]" />
-                    <span>Online/Offline</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <Button
-                    size="lg"
-                    onClick={() => setShowEnquiry(true)}
-                      className="bg-[#ffc107] text-black hover:bg-[#ffb300] px-6 py-3 text-center"
-                  >
-                    Enquiry Now
-                  </Button>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative"
-              >
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    className="w-full h-96 object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  {/* removed icon badge: only show hero image as requested */}
-                </div>
-              </motion.div>
             </div>
+            <div className="relative">
+              <div className="absolute -inset-3 border border-[#ffc107]/30" />
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#1b1d1e]">
+                <img src={graphicDesignImage} alt="Graphic design workspace and visual communication" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/55 via-transparent to-[#ffc107]/15" />
+                <div className="absolute bottom-5 left-5 border-l-2 border-[#ffc107] pl-4"><p className="text-xs tracking-[.2em] text-[#ffc107]">MAKE IT VISIBLE</p><p className="mt-1 text-sm font-semibold">Typography / Composition / Brand</p></div>
+              </div>
+            </div>
+          </div>
+          <div className="relative mx-auto mt-14 grid max-w-7xl grid-cols-2 border-y border-white/10 px-5 sm:px-8 md:grid-cols-4 lg:px-12">
+            {[['08', 'Months'], ['160', 'Hours'], ['Graphic Design', '+ Digital Content'], ['Portfolio', 'Development']].map(([value, label]) => <div key={label} className="border-r border-white/10 px-4 py-5 first:pl-0 last:border-0"><p className="text-xl font-bold text-[#ffc107] sm:text-2xl">{value}</p><p className="mt-1 text-xs uppercase tracking-wider text-white/45">{label}</p></div>)}
           </div>
         </section>
 
-        {/* Course Highlights */}
-        <section className="py-16 bg-[#0a0a0f]">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Course Highlights</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              {normalizedHighlights.map((highlight, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="text-center"
-                >
-                  <CheckCircle2 className="w-12 h-12 text-[#ffc107] mx-auto mb-3" />
-                  <p className="text-sm font-medium">{highlight}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+        <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+          <div className="grid gap-10 lg:grid-cols-[.7fr_1.3fr]"><div><p className="text-xs font-bold tracking-[.2em] text-[#ffc107]">THE CORE POSITION</p><h2 className="mt-4 max-w-sm text-4xl leading-tight sm:text-5xl">Learn Graphic Design. <span className="text-white/45">Build Professional Design Work.</span></h2></div><div className="grid gap-0 border-t border-white/15">{['Design Fundamentals', 'Professional Graphic Design', 'Digital Content Design', 'Generative AI for Designers', 'Branding & Visual Communication', 'Portfolio & Industry Project'].map((item, index) => <div key={item} className="flex items-center gap-5 border-b border-white/10 py-4"><span className="font-mono text-xs text-[#ffc107]">0{index + 1}</span><span className="text-lg font-medium">{item}</span><ArrowRight className="ml-auto h-4 w-4 text-white/30" /></div>)}</div></div>
         </section>
 
-        {/* Course Description */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold mb-6">About the Course</h2>
-              <p className="text-gray-300 text-lg leading-relaxed mb-3">
-                {course.longDescription}
-              </p>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                This program includes dedicated mentor support, real-world assignments, and placement-oriented projects.
-              </p>
-            </div>
-          </div>
-        </section>
+        <section id="curriculum" className="border-y border-white/10 bg-[#101213] px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto max-w-7xl"><p className="text-xs font-bold tracking-[.2em] text-[#ffc107]">THE CURRICULUM</p><div className="mt-4 flex flex-wrap items-end justify-between gap-5"><h2 className="max-w-2xl text-4xl sm:text-6xl">From first principles to a finished portfolio.</h2><p className="max-w-xs text-sm leading-relaxed text-white/50">A practical learning arc: learn, apply, build, refine, deliver.</p></div><div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{modules.map((module) => { const Icon = module.icon; return <article key={module.number} className="group border border-white/10 bg-[#151718] p-6 transition-colors hover:border-[#ffc107]/60"><div className="flex items-start justify-between"><span className="font-mono text-sm text-[#ffc107]">{module.number}</span><Icon className="h-5 w-5 text-[#ffc107]" /></div><h3 className="mt-12 text-2xl">{module.title}</h3><p className="mt-3 min-h-12 text-sm leading-relaxed text-white/50">{module.summary}</p><div className="mt-6 border-t border-white/10 pt-5"><p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-white/35">You will cover</p><div className="flex flex-wrap gap-2">{module.items.map((item) => <span key={item} className="border border-white/10 px-2 py-1 text-xs text-white/70">{item}</span>)}</div><p className="mt-5 text-xs leading-relaxed text-white/55"><strong className="text-[#ffc107]">Practical:</strong> {module.practical}</p><p className="mt-3 flex items-center gap-2 text-sm font-semibold"><Check className="h-4 w-4 text-[#ffc107]" /> {module.output}</p></div></article>; })}</div></div></section>
 
-        {/* What You'll Learn */}
-        <section className="py-16 bg-[#0a0a0f]">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">What You'll Learn</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {normalizedOutcomes.map((outcome, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="flex items-start gap-3 bg-[#14141a] p-4 rounded-xl"
-                >
-                  <Target className="w-5 h-5 text-[#ffc107] mt-1 flex-shrink-0" />
-                  <span className="text-gray-300">{outcome}</span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="grid gap-12 lg:grid-cols-[.75fr_1.25fr]"><div><p className="text-xs font-bold tracking-[.2em] text-[#ffc107]">PROJECT PROOF</p><h2 className="mt-4 text-4xl sm:text-6xl">Work that shows how you think.</h2><p className="mt-6 max-w-sm leading-relaxed text-white/55">Your portfolio moves from typography and composition to production design, brand identity, campaign creative, digital content and AI-assisted design.</p></div><div className="grid grid-cols-2 gap-3"><figure className="group relative col-span-2 aspect-[2/1] overflow-hidden bg-[#17191a]"><img src={brandingImage} alt="Brand identity design project" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" /><figcaption className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 text-sm">Brand Identity / Visual System</figcaption></figure><figure className="group relative aspect-square overflow-hidden bg-[#17191a]"><img src={advertisementImage} alt="Advertisement design project" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" /><figcaption className="absolute bottom-0 left-0 right-0 bg-black/70 p-3 text-xs">Campaign Creative</figcaption></figure><figure className="group relative aspect-square overflow-hidden bg-[#17191a]"><img src={thumbnailImage} alt="Digital content thumbnail design project" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" /><figcaption className="absolute bottom-0 left-0 right-0 bg-black/70 p-3 text-xs">Digital Content</figcaption></figure></div></div></section>
 
-        {/* Tools You'll Master */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Tools You'll Master</h2>
-            <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
-              {course.tools.map((tool, index) => (
-                <motion.span
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.03 }}
-                  className="px-6 py-3 bg-[#ffc107]/10 text-[#ffc107] rounded-full font-medium border border-[#ffc107]/20"
-                >
-                  {tool}
-                </motion.span>
-              ))}
-            </div>
-          </div>
-        </section>
+        <section className="border-y border-white/10 bg-[#ffc107] px-5 py-16 text-black sm:px-8 lg:px-12"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_auto] lg:items-end"><div><p className="text-xs font-bold tracking-[.2em]">CAREER DIRECTIONS</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-6xl">Skills → Projects → Portfolio → Career Direction</h2></div><div className="grid gap-3 text-lg font-bold sm:grid-cols-3 lg:min-w-[480px]">{['Graphic Designer', 'Brand Designer', 'Digital Designer'].map((career) => <div key={career} className="border-t border-black/30 pt-3">{career}</div>)}</div></div></section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-[#ffc107] to-[#ffb300]">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-              Ready to Start Your Journey?
-            </h2>
-            <p className="text-black/80 text-lg mb-8 max-w-2xl mx-auto">
-              Join thousands of students who have transformed their careers with our courses
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                onClick={() => setShowEnquiry(true)}
-                className="bg-black text-[#ffc107] hover:bg-gray-900 px-8 py-3"
-              >
-                Get Started Now
-              </Button>
-            </div>
-          </div>
-        </section>
+        <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="grid gap-12 lg:grid-cols-2"><div><p className="text-xs font-bold tracking-[.2em] text-[#ffc107]">WHY THIS PROGRAM</p><h2 className="mt-4 text-4xl sm:text-6xl">A complete design pipeline.</h2><div className="mt-8 space-y-3">{['Strong design foundation', 'Professional production', 'Digital content systems', 'AI-assisted design workflow', 'Branding and visual communication', 'Portfolio development'].map((item) => <div key={item} className="flex items-center gap-3 border-b border-white/10 py-3 text-lg"><Check className="h-4 w-4 text-[#ffc107]" />{item}</div>)}</div></div><div className="lg:pt-20"><p className="text-xs font-bold tracking-[.2em] text-[#ffc107]">SOFTWARE PIPELINE</p><div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">{['Photoshop', 'Illustrator', 'InDesign', 'Canva', 'Adobe Express', 'Lightroom', 'Generative AI Tools', 'Photoshop AI', 'Illustrator AI'].map((tool) => <div key={tool} className="border border-white/15 px-4 py-5 text-sm text-white/75">{tool}</div>)}</div><div className="mt-12 border border-[#ffc107]/40 p-6"><p className="text-xs uppercase tracking-widest text-[#ffc107]">Assessment framework</p><div className="mt-5 space-y-3 text-sm">{[['Assignments', '30%'], ['Projects', '30%'], ['Portfolio', '25%'], ['Viva / Test', '15%']].map(([name, score]) => <div key={name} className="flex justify-between border-b border-white/10 pb-2"><span>{name}</span><strong>{score}</strong></div>)}</div></div></div></div></section>
 
-        <Footer />
+        <section className="border-t border-white/10 bg-[#101213] px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[.7fr_1.3fr]"><div><p className="text-xs font-bold tracking-[.2em] text-[#ffc107]">FAQ</p><h2 className="mt-4 text-4xl sm:text-5xl">Questions, answered.</h2></div><div>{faqs.map(([question, answer], index) => <div key={question} className="border-b border-white/10"><button onClick={() => setOpenFaq(openFaq === index ? null : index)} className="flex w-full items-center justify-between gap-5 py-5 text-left text-base font-semibold"><span>{question}</span><ChevronDown className={`h-5 w-5 shrink-0 text-[#ffc107] transition-transform ${openFaq === index ? 'rotate-180' : ''}`} /></button>{openFaq === index && <p className="pb-5 pr-10 text-sm leading-relaxed text-white/55">{answer}</p>}</div>)}</div></div></section>
 
-        <EnquiryModal
-          isOpen={showEnquiry}
-          onClose={() => setShowEnquiry(false)}
-          selectedCourse={course.title}
-        />
-      </div>
+        <section className="px-5 py-20 sm:px-8 lg:px-12 lg:py-28"><div className="mx-auto max-w-7xl border border-[#ffc107]/40 bg-[#141617] p-8 sm:p-12 lg:flex lg:items-end lg:justify-between"><div><p className="text-xs font-bold tracking-[.2em] text-[#ffc107]">START WITH A CONVERSATION</p><h2 className="mt-4 max-w-2xl text-4xl sm:text-6xl">Make your next piece of work count.</h2><p className="mt-5 max-w-xl text-white/55">Talk to the Design Engine team about the Graphic Design course in Saket.</p></div><button onClick={openEnquiry} className="mt-8 inline-flex shrink-0 items-center gap-3 bg-[#ffc107] px-6 py-3.5 text-sm font-bold text-black transition-transform hover:-translate-y-1 lg:mt-0">Enquire About The Course <ArrowRight className="h-4 w-4" /></button></div></section>
+      </main>
+      <div className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between border-t border-white/15 bg-[#090a0b]/95 px-4 py-3 backdrop-blur md:hidden"><span className="text-xs font-semibold">Graphic Design in Saket</span><button onClick={openEnquiry} className="bg-[#ffc107] px-4 py-2 text-xs font-bold text-black">Enquire Now</button></div>
+      <Footer />
       <StickyButtons />
-    </>
+      <EnquiryModal isOpen={isEnquiryOpen} onClose={() => setIsEnquiryOpen(false)} selectedCourse={courseName} />
+    </div>
   );
 };
 

@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+.course-reference {
+  font-family: 'DM Sans', sans-serif;
+}
+
+.course-reference h1,
+.course-reference h2,
+.course-reference h3,
+.course-reference h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.course-reference #enquiry {
+  display: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

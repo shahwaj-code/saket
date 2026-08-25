@@ -1,0 +1,5 @@
+import CourseCampaignPage from "./CourseCampaignPage";
+import image from "@/assets/courses/ui-ux.webp";
+
+const UIUX = () => <CourseCampaignPage course={{ name: "UI/UX Design", title: "UI/UX Design Course in Saket", slug: "ui-ux", image, duration: "8 Months", hours: "160 Hours", focus: "User Interface + Experience", description: "Build practical UI/UX design skills through research, wireframes, interface systems, prototyping and portfolio projects.", curriculum: ["Design Research", "Information Architecture", "Wireframing", "Interface Design", "Design Systems", "Prototyping & Portfolio"], outcomes: ["Research-led user flows", "Wireframes and interface concepts", "Responsive interface systems", "Interactive prototypes", "A focused UI/UX portfolio"], careers: ["UI Designer", "UX Designer", "Product Designer"], faqs: [["What is covered?", "Research, wireframing, UI systems, prototyping and portfolio work."], ["Will I build a portfolio?", "Yes, the course ends with portfolio-ready project work."]] }} />;
+export default UIUX;

@@ -1,0 +1,5 @@
+import CourseCampaignPage from "./CourseCampaignPage";
+import image from "@/assets/courses/Animation.webp";
+
+const Animation = () => <CourseCampaignPage course={{ name: "Animation", title: "Animation Course in Saket", slug: "animation", image, duration: "8 Months", hours: "160 Hours", focus: "2D + 3D Animation", description: "Develop animation fundamentals through visual storytelling, production practice and portfolio-focused projects.", curriculum: ["Animation Principles", "Storytelling & Boards", "Character Design", "2D Animation", "3D Foundations", "Portfolio Project"], outcomes: ["Animation exercises", "Storyboard and character concepts", "Short production studies", "A curated animation reel", "Portfolio-ready final project"], careers: ["Animator", "Motion Designer", "3D Artist"], faqs: [["What does the course focus on?", "Animation principles, storytelling, production practice and portfolio work."], ["Will I create projects?", "Yes, practical exercises and a final portfolio project are included."]] }} />;
+export default Animation;

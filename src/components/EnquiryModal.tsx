@@ -13,6 +13,7 @@ interface EnquiryModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedCourse?: string;
+  embedded?: boolean;
 }
 
 // ✅ FIXED: Remove duplicates and sort alphabetically
@@ -27,7 +28,7 @@ const courses = [
   "Video Editing",
 ].sort();
 
-const EnquiryModal = ({ isOpen, onClose, selectedCourse }: EnquiryModalProps) => {
+const EnquiryModal = ({ isOpen, onClose, selectedCourse, embedded = false }: EnquiryModalProps) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -56,10 +57,10 @@ const EnquiryModal = ({ isOpen, onClose, selectedCourse }: EnquiryModalProps) =>
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !embedded) {
       window.history.pushState(null, "", "#enquiry-form");
     }
-  }, [isOpen]);
+  }, [isOpen, embedded]);
 
   useEffect(() => {
     if (isOpen && selectedCourse) {
@@ -289,14 +290,14 @@ const EnquiryModal = ({ isOpen, onClose, selectedCourse }: EnquiryModalProps) =>
       {isOpen && (
         <>
           {/* Backdrop */}
-          <motion.div
+          {!embedded && <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-[#030306]/80 backdrop-blur-xl"
             onClick={handleClose}
-          />
+          />}
 
           {/* Modal */}
           <motion.div
@@ -305,7 +306,7 @@ const EnquiryModal = ({ isOpen, onClose, selectedCourse }: EnquiryModalProps) =>
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 z-[101] w-full max-w-lg bg-[#030306] border-l border-[#ffc107]/20 overflow-y-auto"
+            className={embedded ? "relative z-10 w-full overflow-hidden rounded-xl border-0 bg-transparent" : "fixed right-0 top-0 bottom-0 z-[101] w-full max-w-lg overflow-y-auto border-l border-[#ffc107]/20 bg-[#030306]"}
           >
             {/* Golden orbs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -336,7 +337,7 @@ const EnquiryModal = ({ isOpen, onClose, selectedCourse }: EnquiryModalProps) =>
             </div>
             
             {/* Close Button */}
-            <button
+            {!embedded && <button
               type="button"
               onClick={handleClose}
               disabled={isSubmitting}
@@ -344,11 +345,11 @@ const EnquiryModal = ({ isOpen, onClose, selectedCourse }: EnquiryModalProps) =>
               aria-label="Close modal"
             >
               <X className="w-5 h-5 text-[#ffc107]" />
-            </button>
+            </button>}
 
-            <div className="relative z-10 p-8 pt-16">
+            <div className={embedded ? "relative z-10 p-0" : "relative z-10 p-8 pt-16"}>
               {/* Header */}
-              <motion.div
+              {!embedded && <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
@@ -364,7 +365,7 @@ const EnquiryModal = ({ isOpen, onClose, selectedCourse }: EnquiryModalProps) =>
                 <p className="text-white/60">
                   Drop your deets and our team will hit you up real quick!
                 </p>
-              </motion.div>
+              </motion.div>}
 
               {/* Success State */}
               <AnimatePresence mode="wait">
